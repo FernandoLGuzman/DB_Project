@@ -51,14 +51,11 @@ def resourcePurchase():
         #POST handler code
         return 'resource/purcahse POST'
 
-@resources.route('/purchase/<int:id>', methods = ['GET', 'PUT'])
+@resources.route('/purchase/<int:id>', methods = ['GET'])
 def resourcePurchaseById(id):
     if request.method == 'GET':
         #GET handler code
         return f'resource/purchase/{id} GET'
-    elif request.method == 'PUT':
-        #PUT handler code
-        return f'resource/purcahse/{id} PUT'
 
 @resources.route('/statistics', methods = ['GET'])
 def resourceStatistics():
