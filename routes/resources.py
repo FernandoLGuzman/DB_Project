@@ -4,7 +4,7 @@ from flask import request
 resources = Blueprint('resources', __name__)
 
 @resources.route('/', methods = ['GET', 'POST'])
-def resourceCRUD():
+def resource():
     if request.method == 'GET':
         #GET handler code
         return 'resource GET'
@@ -13,19 +13,19 @@ def resourceCRUD():
         return 'resource POST'
 
 @resources.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
-def resourceCRUD(id):
+def resourceById(id):
     if request.method == 'GET':
         #GET handler code
-        return 'resource/<id> GET'
+        return f'resource/{id} GET'
     elif request.method == 'PUT':
         #PUT handler code
-        return 'resource/<id> PUT'
+        return f'resource/{id} PUT'
     elif request.method == 'DELETE':
         #DELETE handler code
-        return 'resource/<id> DELETE'
+        return f'resource/{id} DELETE'
 
 @resources.route('/request', methods = ['GET', 'POST'])
-def requestCRUD():
+def resourceRequest():
     if request.method == 'GET':
         #GET handler code
         return 'resource/request GET'
@@ -34,16 +34,16 @@ def requestCRUD():
         return 'resource/request POST'
 
 @resources.route('/request/<int:id>', methods = ['GET', 'PUT'])
-def requestCRUD(id):
+def resourceRequestById(id):
     if request.method == 'GET':
         #GET handler code
-        return 'resource/request/<id> GET'
+        return f'resource/request/{id} GET'
     elif request.method == 'PUT':
         #PUT handler code
-        return 'resource/request/<id> PUT'
+        return f'resource/request/{id} PUT'
 
-@resources.route('/purchase', method = ['GET', 'POST'])
-def purchaseCRUD():
+@resources.route('/purchase', methods = ['GET', 'POST'])
+def resourcePurchase():
     if request.method == 'GET':
         #GET handler code
         return 'resource/purchase GET'
@@ -51,14 +51,14 @@ def purchaseCRUD():
         #POST handler code
         return 'resource/purcahse POST'
 
-@resources.route('/purchase/<int:id>', method = ['GET', 'PUT'])
-def purchaseCRUD(id):
+@resources.route('/purchase/<int:id>', methods = ['GET', 'PUT'])
+def resourcePurchaseById(id):
     if request.method == 'GET':
         #GET handler code
-        return 'resource/purchase/<id> GET'
+        return f'resource/purchase/{id} GET'
     elif request.method == 'PUT':
         #PUT handler code
-        return 'resource/purcahse/<id> PUT'
+        return f'resource/purcahse/{id} PUT'
 
 @resources.route('/statistics', methods = ['GET'])
 def resourceStatistics():
