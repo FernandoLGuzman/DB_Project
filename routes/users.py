@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import request
-from handlers.users import handler
+from handlers.userHandler import handler
 
 users = Blueprint('users', __name__)
 
