@@ -1,51 +1,51 @@
 from flask import jsonify
 class ResourceHandler:
 
-    def getAllResources(args):
+    def getAllResources(self, args):
         limit = args.get('limit')
         orderBy = args.get('orderBy')
         return jsonify(Resources = 'Coming soon'), 200
 
-    def getResourceById(id):
+    def getResourceById(self, id):
 
-        return jsonify(Resource = 'Coming soon'), 200
+        return jsonify(Resource = {'id':id}), 200
 
-    def getResourceRequests(args):
+    def getResourceRequests(self, args):
 
         return jsonify(ResourceRequests = 'Coming soon'), 200
 
-    def getResourceRequestById(id):
+    def getResourceRequestById(self, id):
 
-        return jsonify(ResourceRequest = 'Coming soon'), 200
+        return jsonify(ResourceRequest = {'id':id}), 200
 
-    def getResourcePurchases(args):
+    def getResourcePurchases(self, args):
 
         return jsonify(ResourcePurchases = 'Coming soon'), 200
 
-    def getResourcePurchaseById(id):
+    def getResourcePurchaseById(self, id):
 
-        return jsonify(ResourcePurchase = 'Coming soon'), 200
+        return jsonify(ResourcePurchase = {'id':id}), 200
 
-    def insertResource(args):
+    def insertResource(self, args):
 
-        return jsonify(Resource = 'Coming soon'), 200
+        return jsonify(Resource = 'Insert Coming soon'), 200
 
-    def insertResourceRequest(args):
+    def insertResourceRequest(self, args):
 
-        return jsonify(ResourceRequest = 'Coming soon'), 200
+        return jsonify(ResourceRequest = 'Insert Coming soon'), 200
 
-    def insertResourcePurchase(args):
+    def insertResourcePurchase(self, args):
 
-        return jsonify(ResourcePurchase = 'Coming soon'), 200
+        return jsonify(ResourcePurchase = 'Insert Coming soon'), 200
 
-    def updateResource(id, args):
+    def updateResource(self, id, args):
 
-        return jsonify(Resource = 'Coming soon'), 200
+        return jsonify(Resource = {'id':id}, Status = 'Update Comming Soon'), 200
 
-    def updateResourceRequest(id, args):
+    def updateResourceRequest(self, id, args):
 
-        return jsonify(ResourceRequest = 'Coming soon'), 200
+        return jsonify(ResourceRequest = {'id':id}, Status = 'Update Comming Soon'), 200
 
-    def deleteResource(id):
+    def deleteResource(self, id):
 
-        return jsonify(Resource = 'Coming soon'), 200
+        return jsonify(Resource = {'id':id}), 200
