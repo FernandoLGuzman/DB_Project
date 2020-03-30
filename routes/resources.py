@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import request
+from handlers.resourceHandler import ResourceHandler
 
 resources = Blueprint('resources', __name__)
 
@@ -7,55 +8,56 @@ resources = Blueprint('resources', __name__)
 def resource():
     if request.method == 'GET':
         #GET handler code
-        return 'resource GET'
+        print(request.args)
+        return ResourceHandler().getAllResources(request.args)
     elif request.method == 'POST':
         #POST handler code
-        return 'resource POST'
+        return ResourceHandler().insertResource(request.json)
 
 @resources.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def resourceById(id):
     if request.method == 'GET':
         #GET handler code
-        return f'resource/{id} GET'
+        return ResourceHandler().getResourceById(id)
     elif request.method == 'PUT':
         #PUT handler code
-        return f'resource/{id} PUT'
+        return ResourceHandler().updateResource(id, request.json)
     elif request.method == 'DELETE':
         #DELETE handler code
-        return f'resource/{id} DELETE'
+        return ResourceHandler().deleteResource(id)
 
 @resources.route('/request', methods = ['GET', 'POST'])
 def resourceRequest():
     if request.method == 'GET':
         #GET handler code
-        return 'resource/request GET'
+        return ResourceHandler().getResourceRequests(request.args)
     elif request.method == 'POST':
         #POST handler code
-        return 'resource/request POST'
+        return ResourceHandler().insertResourceRequest(request.json)
 
 @resources.route('/request/<int:id>', methods = ['GET', 'PUT'])
 def resourceRequestById(id):
     if request.method == 'GET':
         #GET handler code
-        return f'resource/request/{id} GET'
+        return ResourceHandler().getResourceRequestById(id)
     elif request.method == 'PUT':
         #PUT handler code
-        return f'resource/request/{id} PUT'
+        return ResourceHandler().updateResourceRequest(id, request.json)
 
 @resources.route('/purchase', methods = ['GET', 'POST'])
 def resourcePurchase():
     if request.method == 'GET':
         #GET handler code
-        return 'resource/purchase GET'
+        return ResourceHandler().getResourcePurchases(request.args)
     elif request.method == 'POST':
         #POST handler code
-        return 'resource/purcahse POST'
+        return ResourceHandler().insertResourcePurchase(request.json)
 
 @resources.route('/purchase/<int:id>', methods = ['GET'])
 def resourcePurchaseById(id):
     if request.method == 'GET':
         #GET handler code
-        return f'resource/purchase/{id} GET'
+        return ResourceHandler().getResourcePurchaseById(id)
 
 @resources.route('/statistics', methods = ['GET'])
 def resourceStatistics():
