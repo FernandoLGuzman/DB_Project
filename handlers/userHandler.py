@@ -30,7 +30,7 @@ class UserHandler:
 
     def getAllUsers(self):
         # dao = UsersDAO()
-        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]]
+        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]] # hardcoded, delete later
         # users_list = dao.getAllUsers()
         result_list = []
         for row in users_list:
@@ -44,7 +44,7 @@ class UserHandler:
         users_list = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]]
         # row = dao.getUserByID(uid)
         # if not row:
-        if False: # hardcoded, duh
+        if False: # hardcoded, delete later
             return jsonify(Error = "Part Not Found"), 404
         else:
             result_list = []
@@ -60,7 +60,7 @@ class UserHandler:
         email = args.get("email")
         phone_number = args.get("phone_number")
         # dao = UsersDAO()
-        users_list = []
+        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]] # hardcoded, empty later
         if (len(args) == 2) and fname and lname:
             # users_list = dao.getUsersByLastName(lname)
             print("Searching Users by First and Last Name") # hardcoded
@@ -73,9 +73,9 @@ class UserHandler:
         else:
             return jsonify(Error = "Malformed query string"), 400
         result_list = []
-        # for row in users_list:
-            # result = self.__build_user_dict(row)
-            # result_list.append(result)
+        for row in users_list:
+            result = self.__build_user_dict(row)
+            result_list.append(result)
         return jsonify(Users = result_list)
 
 
@@ -84,8 +84,8 @@ class UserHandler:
         # if not dao.getUserByID(uid):
             # return jsonify(Error = "User not found."), 404
         # role = dao.getRolebyUserID(uid)
-        # result = self.build_role_dict(role)
-        result = []
+        role = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]] #hardcoded, delete later
+        result = self.build_role_dict(role)
         return jsonify(Role = result)
 
 
@@ -103,12 +103,14 @@ class UserHandler:
                     if email and password:
                         return self.getUserByID(1)
                     else:
-                        return jsonify(Error="Attributes must not be null"), 400
+                        return jsonify(Error = "Attributes must not be null"), 400
                 except:
                     return jsonify(Error = 'Unexpected attributes in get request'), 400
 
 
     def insertUser(self, aid, form):
+        if not form:
+            return jsonify(Error = 'Empty Form'), 400
         print("form: ", form)
         if len(form) != 6:
             return jsonify(Error = "Malformed post request"), 400
@@ -125,9 +127,9 @@ class UserHandler:
                     uid = 0 # temp
                     # uid = dao.insert(fname, lname, email, password, phone_number)
                     result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
-                    return jsonify(User=result), 201
+                    return jsonify(User = result), 201
                 else:
-                    return jsonify(Error="Attributes must not be null"), 400
+                    return jsonify(Error = "Attributes must not be null"), 400
             except:
                 return jsonify(Error = 'Unexpected attributes in post request'), 400
 
@@ -135,7 +137,7 @@ class UserHandler:
     def deleteUser(self, uid):
         # dao = UsersDAO()
         # if not dao.getUserByID(uid):
-        if False: # hardcoded, duh
+        if False: # hardcoded, delete later
             return jsonify(Error = "User not found."), 404
         else:
             # dao.delete(uid)
@@ -145,7 +147,7 @@ class UserHandler:
     def updateUser(self, uid, form):
         # dao = UsersDAO()
         # if not dao.getUserByID(uid):
-        if False: # hardcoded, duh
+        if False: # hardcoded, delete later
             return jsonify(Error = "User not found."), 404
         else:
             if len(form) != 7:
@@ -165,6 +167,6 @@ class UserHandler:
                         result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
                         return jsonify(User = result), 200
                     else:
-                        return jsonify(Error="Attributes must not be null"), 400
+                        return jsonify(Error = "Attributes must not be null"), 400
                 except:
                     return jsonify(Error = 'Unexpected attributes in put request'), 400
