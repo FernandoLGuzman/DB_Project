@@ -26,6 +26,10 @@ def resourceById(id):
         #DELETE handler code
         return ResourceHandler().deleteResource(id)
 
+@resources.route('/restock/<int:resourceId>', methods = ['POST'])
+def resourceRestock(resourceId):
+    return ResourceHandler().restockResource(resourceId, request.json)
+
 @resources.route('/request', methods = ['GET', 'POST'])
 def resourceRequest():
     if request.method == 'GET':
