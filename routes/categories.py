@@ -1,5 +1,5 @@
-from flask import Blueprint
-from flask import request
+from flask import Blueprint, request, jsonify
+from handlers.categoryHandler import CategoryHandler
 
 categories = Blueprint('categories', __name__)
 
@@ -7,19 +7,20 @@ categories = Blueprint('categories', __name__)
 def category():
     if request.method == 'GET':
         #GET handle rcode
-        return 'category GET'
+        return CategoryHandler().getAllCategories()
     elif request.method == 'POST':
         #POST handler code
-        return 'category POST'
+        print("REQUEST: ", request.json)
+        return CategoryHandler().insertCategory(request.json)
 
 @categories.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def categoryById(id):
     if request.method == 'GET':
         #GET handler code
-        return f'category/{id} GET'
+        return CategoryHandler().getCategoryById(id)
     elif request.method == 'PUT':
         #PUT handler code
-        return f'category/{id} PUT'
+        return CategoryHandler().updateCategory(id, request.json)
     elif request.method == 'DELETE':
         #DELETE handler code
-        return f'category/{id} DELETE'
+        return CategoryHandler().deleteCategory(id)

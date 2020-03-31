@@ -1,5 +1,5 @@
-from flask import Blueprint
-from flask import request
+from flask import Blueprint, request, jsonify
+from handlers.rolesHandler import RolesHandler
 
 roles = Blueprint('roles', __name__)
 
@@ -7,19 +7,20 @@ roles = Blueprint('roles', __name__)
 def role():
     if request.method == 'GET':
         #GET handle rcode
-        return 'category GET'
+        return RolesHandler().getAllRoles()
     elif request.method == 'POST':
         #POST handler code
-        return 'category POST'
+        print("REQUEST: ", request.json)
+        return RolesHandler().insertRole(request.json)
 
 @roles.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def roleById(id):
     if request.method == 'GET':
         #GET handler code
-        return f'category/{id} GET'
+        return RolesHandler().getRoleById(id)
     elif request.method == 'PUT':
         #PUT handler code
-        return f'category/{id} PUT'
+        return RolesHandler().updateRole(id, request.json)
     elif request.method == 'DELETE':
         #DELETE handler code
-        return f'category/{id} DELETE'
+        return RolesHandler().deleteRole(id)
