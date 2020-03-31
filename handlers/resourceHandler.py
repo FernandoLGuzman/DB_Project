@@ -168,6 +168,10 @@ class ResourceHandler:
         except:
             return jsonify(Error = 'Unexpected attributes in post request'), 400
 
-    def deleteResource(self, id):
+    def restockResource(self, resourceId, args):
+        #dao logic
+        return jsonify(Restock = "Success"), 200
 
+    def deleteResource(self, id):
+        #dao logic
         return jsonify(Resource = {'id':id}), 200
