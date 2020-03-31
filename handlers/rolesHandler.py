@@ -25,8 +25,8 @@ class RolesHandler:
         return jsonify(Roles = result_list), 200
 
 
-    def getRoleById(self, pid):
-        roles_list = [[pid, 'role']]
+    def getRoleById(self, rid):
+        roles_list = [[rid, 'role']]
         result_list = []
         for row in roles_list:
             result = self.__build_role_dict(row)
@@ -42,17 +42,17 @@ class RolesHandler:
             name = form['name']
             if name:
                 #dao = PartsDAO()
-                pid = 0
-                #pid = dao.insert(name)
-                result = self.__build_role_attributes(pid, name)
-                return jsonify(Part=result), 201
+                rid = 0
+                #rid = dao.insert(name)
+                result = self.__build_role_attributes(rid, name)
+                return jsonify(Role=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
 
 
-    def updateRole(self, pid, form):
+    def updateRole(self, rid, form):
         # dao = PartsDAO()
-        # if not dao.getPartById(pid):
+        # if not dao.getPartById(rid):
         #     return jsonify(Error = "Part not found."), 404
         # else:
             if len(form) != 1:
@@ -60,17 +60,17 @@ class RolesHandler:
             else:
                 name = form['name']
                 if name:
-                    # dao.update(pid, name)
-                    result = self.__build_role_attributes(pid, name)
-                    return jsonify(Part=result), 200
+                    # dao.update(rid, name)
+                    result = self.__build_role_attributes(rid, name)
+                    return jsonify(Role=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
 
 
-    def deleteRole(self, pid):
+    def deleteRole(self, rid):
         #dao = PartsDAO()
-        # if not dao.getPartById(pid):
+        # if not dao.getPartById(rid):
         #     return jsonify(Error = "Part not found."), 404
         # else:
-            # dao.delete(pid)
+            # dao.delete(rid)
         return jsonify(DeleteStatus = "OK"), 200

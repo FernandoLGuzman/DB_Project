@@ -1,33 +1,36 @@
-from flask import Blueprint
-from flask import request
+from flask import Blueprint, request, json
 from handlers.userHandler import UserHandler
+from handlers.addressHandler import AddressHandler
 
 users = Blueprint('users', __name__)
 
 @users.route('/', methods = ['GET'])
 def user():
     #GET handler code
-    return 'user GET'
+    return UserHandler().getAllUsers()
 
 @users.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def userById(id):
     if request.method == 'GET':
         #GET handler code
-        return f'user/{id} GET'
+        return UserHandler().getUserByID(id)
     elif request.method == 'PUT':
         #PUT handler code
-        return f'user/{id} PUT'
+        return UserHandler().updateUser(id, request.json)
     elif request.method == 'DELETE':
     #else:?
         #DELETE handler code
-        return f'user/{id} DELETE'
+        return UserHandler().deleteUser(id)
 
 @users.route('/log_in', methods = ['GET'])
 def userLogin():
     #GET handler code
-    return 'user/log_in GET'
+    return UserHandler().loginUser(request.json)
 
-@users.route('/sign_up/<int:role>', methods = ['POST'])
-def userSignup(role):
+@users.route('/sign_up', methods = ['POST'])
+def userSignup():
     #POST handler code
-    return f'user/sign_up/{role} POST'
+    form = request.json
+    reponse = AddressHandler().insertAddress(form['Address'])
+    aid = json.loads(reponse[0].get_data(True))['Address']['address_id']
+    return UserHandler().insertUser(aid, form['User'])

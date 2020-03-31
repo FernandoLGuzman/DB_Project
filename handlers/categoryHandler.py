@@ -27,8 +27,8 @@ class CategoryHandler:
         return jsonify(Categories = result_list), 200
 
 
-    def getCategoryById(self, pid):
-        categories_list = [[pid, 'null', 'category']]
+    def getCategoryById(self, cid):
+        categories_list = [[cid, 'null', 'category']]
         result_list = []
         for row in categories_list:
             result = self.__build_category_dict(row)
@@ -47,17 +47,17 @@ class CategoryHandler:
             name = form['name']
             if name:
                 #dao = PartsDAO()
-                pid = 0
-                #pid = dao.insert(parent_category, name)
-                result = self.__build_category_attributes(pid, parent_category, name)
+                cid = 0
+                #cid = dao.insert(parent_category, name)
+                result = self.__build_category_attributes(cid, parent_category, name)
                 return jsonify(Category=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
 
 
-    def updateCategory(self, pid, form):
+    def updateCategory(self, cid, form):
         # dao = PartsDAO()
-        # if not dao.getPartById(pid):
+        # if not dao.getPartById(cid):
         #     return jsonify(Error = "Part not found."), 404
         # else:
             if len(form) != 2:
@@ -66,17 +66,17 @@ class CategoryHandler:
                 parent_category = form['parent_category']
                 name = form['name']
                 if name:
-                    # dao.update(pid, parent_category, name)
-                    result = self.__build_category_attributes(pid, parent_category, name)
+                    # dao.update(cid, parent_category, name)
+                    result = self.__build_category_attributes(cid, parent_category, name)
                     return jsonify(Category=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
 
 
-    def deleteCategory(self, pid):
+    def deleteCategory(self, cid):
         #dao = PartsDAO()
-        # if not dao.getPartById(pid):
+        # if not dao.getPartById(cid):
         #     return jsonify(Error = "Part not found."), 404
         # else:
-            # dao.delete(pid)
+            # dao.delete(cid)
         return jsonify(DeleteStatus = "OK"), 200
