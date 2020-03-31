@@ -9,7 +9,7 @@ def resource():
     if request.method == 'GET':
         #GET handler code
         print(request.args)
-        return ResourceHandler().getAllResources(request.args)
+        return ResourceHandler().getResources(request.args)
     elif request.method == 'POST':
         #POST handler code
         return ResourceHandler().insertResource(request.json)
