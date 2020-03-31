@@ -43,16 +43,19 @@ class CategoryHandler:
         if len(form) != 2:
             return jsonify(Error = "Malformed post request"), 400
         else:
-            parent_category = form['parent_category']
-            name = form['name']
-            if name:
-                #dao = PartsDAO()
-                cid = 0
-                #cid = dao.insert(parent_category, name)
-                result = self.__build_category_attributes(cid, parent_category, name)
-                return jsonify(Category=result), 201
-            else:
-                return jsonify(Error="Unexpected attributes in post request"), 400
+            try:
+                parent_category = form['parent_category']
+                name = form['name']
+                if name:
+                    #dao = PartsDAO()
+                    cid = 0
+                    #cid = dao.insert(parent_category, name)
+                    result = self.__build_category_attributes(cid, parent_category, name)
+                    return jsonify(Category=result), 201
+                else:
+                    return jsonify(Error="Attributes must not be null"), 400
+            except:
+                return jsonify(Error = 'Unexpected attributes in post request'), 400
 
 
     def updateCategory(self, cid, form):
@@ -63,14 +66,17 @@ class CategoryHandler:
             if len(form) != 2:
                 return jsonify(Error="Malformed update request"), 400
             else:
-                parent_category = form['parent_category']
-                name = form['name']
-                if name:
-                    # dao.update(cid, parent_category, name)
-                    result = self.__build_category_attributes(cid, parent_category, name)
-                    return jsonify(Category=result), 200
-                else:
-                    return jsonify(Error="Unexpected attributes in update request"), 400
+                try:
+                    parent_category = form['parent_category']
+                    name = form['name']
+                    if name:
+                        # dao.update(cid, parent_category, name)
+                        result = self.__build_category_attributes(cid, parent_category, name)
+                        return jsonify(Category=result), 200
+                    else:
+                        return jsonify(Error="Attributes must not be null"), 400
+                except:
+                    return jsonify(Error = 'Unexpected attributes in put request'), 400
 
 
     def deleteCategory(self, cid):

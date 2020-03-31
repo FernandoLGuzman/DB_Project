@@ -54,21 +54,24 @@ class AddressHandler:
         if len(form) != 7:
             return jsonify(Error = "Malformed post request"), 400
         else:
-            street_address = form['street_address']
-            city = form['city']
-            country = form['country']
-            zip_code = form['zip_code']
-            senate_region = form['senate_region']
-            latitud = form['latitud']
-            longitud = form['longitud']
-            if street_address and city and country and zip_code and senate_region and latitud and longitud:
-                #dao = PartsDAO()
-                aid = 2
-                #aid = dao.insert(parent_Address, name)
-                result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
-                return jsonify(Address=result), 201
-            else:
-                return jsonify(Error="Unexpected attributes in post request"), 400
+            try:
+                street_address = form['street_address']
+                city = form['city']
+                country = form['country']
+                zip_code = form['zip_code']
+                senate_region = form['senate_region']
+                latitud = form['latitud']
+                longitud = form['longitud']
+                if street_address and city and country and zip_code and senate_region and latitud and longitud:
+                    #dao = PartsDAO()
+                    aid = 2
+                    #aid = dao.insert(parent_Address, name)
+                    result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
+                    return jsonify(Address=result), 201
+                else:
+                    return jsonify(Error="Attributes must not be null"), 400
+            except:
+                return jsonify(Error = 'Unexpected attributes in post request'), 400
 
 
     def updateAddress(self, aid, form):
@@ -79,19 +82,22 @@ class AddressHandler:
             if len(form) != 7:
                 return jsonify(Error="Malformed update request"), 400
             else:
-                street_address = form['street_address']
-                city = form['city']
-                country = form['country']
-                zip_code = form['zip_code']
-                senate_region = form['senate_region']
-                latitud = form['latitud']
-                longitud = form['longitud']
-                if street_address and city and country and zip_code and senate_region and latitud and longitud:
-                    # dao.update(aid, parent_Address, name)
-                    result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
-                    return jsonify(Address=result), 200
-                else:
-                    return jsonify(Error="Unexpected attributes in update request"), 400
+                try:
+                    street_address = form['street_address']
+                    city = form['city']
+                    country = form['country']
+                    zip_code = form['zip_code']
+                    senate_region = form['senate_region']
+                    latitud = form['latitud']
+                    longitud = form['longitud']
+                    if street_address and city and country and zip_code and senate_region and latitud and longitud:
+                        # dao.update(aid, parent_Address, name)
+                        result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
+                        return jsonify(Address=result), 200
+                    else:
+                        return jsonify(Error="Attributes must not be null"), 400
+                except:
+                    return jsonify(Error = 'Unexpected attributes in put request'), 400
 
 
     def deleteAddress(self, aid):

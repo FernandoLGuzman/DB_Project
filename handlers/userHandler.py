@@ -97,12 +97,15 @@ class UserHandler:
             if len(form) != 2:
                 return jsonify(Error = "Malformed login request."), 400
             else:
-                email = form['email']
-                password = form['password']
-                if email and password:
-                    return self.getUserByID(1)
-                else:
-                    return jsonify(Error = 'Unexpected attributes in login request'), 400
+                try:
+                    email = form['email']
+                    password = form['password']
+                    if email and password:
+                        return self.getUserByID(1)
+                    else:
+                        return jsonify(Error="Attributes must not be null"), 400
+                except:
+                    return jsonify(Error = 'Unexpected attributes in get request'), 400
 
 
     def insertUser(self, aid, form):
@@ -110,19 +113,22 @@ class UserHandler:
         if len(form) != 6:
             return jsonify(Error = "Malformed post request"), 400
         else:
-            rid = form['role_id']
-            fname = form['first_name']
-            lname = form['last_name']
-            email = form['email']
-            password = form['password']
-            phone_number = form['phone_number']
-            if fname and lname and email and password and phone_number and rid:
-                # dao = UsersDAO()
-                uid = 0 # temp
-                # uid = dao.insert(fname, lname, email, password, phone_number)
-                result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
-                return jsonify(User=result), 201
-            else:
+            try:
+                rid = form['role_id']
+                fname = form['first_name']
+                lname = form['last_name']
+                email = form['email']
+                password = form['password']
+                phone_number = form['phone_number']
+                if fname and lname and email and password and phone_number and rid:
+                    # dao = UsersDAO()
+                    uid = 0 # temp
+                    # uid = dao.insert(fname, lname, email, password, phone_number)
+                    result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
+                    return jsonify(User=result), 201
+                else:
+                    return jsonify(Error="Attributes must not be null"), 400
+            except:
                 return jsonify(Error = 'Unexpected attributes in post request'), 400
 
 
@@ -133,7 +139,7 @@ class UserHandler:
             return jsonify(Error = "User not found."), 404
         else:
             # dao.delete(uid)
-            return jsonify(DeleteStatus = "OK"), 
+            return jsonify(DeleteStatus = "OK"), 200
 
 
     def updateUser(self, uid, form):
@@ -145,17 +151,20 @@ class UserHandler:
             if len(form) != 7:
                 return jsonify(Error = "Malformed update request."), 400
             else:
-                aid = form['address_id']
-                rid = form['role_id']
-                fname = form['first_name']
-                lname = form['last_name']
-                email = form['email']
-                password = form['password']
-                phone_number = form['phone_number']
-                if fname and lname and email and password and phone_number and aid and rid:
-                    # dao = UsersDAO()
-                    # dao.update(uid, aid, rid, fname, lname, email, password, phone_number)
-                    result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
-                    return jsonify(User = result), 200
-                else:
-                    return jsonify(Error = 'Unexpected attributes in update request'), 400
+                try:
+                    aid = form['address_id']
+                    rid = form['role_id']
+                    fname = form['first_name']
+                    lname = form['last_name']
+                    email = form['email']
+                    password = form['password']
+                    phone_number = form['phone_number']
+                    if fname and lname and email and password and phone_number and aid and rid:
+                        # dao = UsersDAO()
+                        # dao.update(uid, aid, rid, fname, lname, email, password, phone_number)
+                        result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
+                        return jsonify(User = result), 200
+                    else:
+                        return jsonify(Error="Attributes must not be null"), 400
+                except:
+                    return jsonify(Error = 'Unexpected attributes in put request'), 400

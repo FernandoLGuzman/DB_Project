@@ -39,15 +39,18 @@ class RolesHandler:
         if len(form) != 1:
             return jsonify(Error = "Malformed post request"), 400
         else:
-            name = form['name']
-            if name:
-                #dao = PartsDAO()
-                rid = 0
-                #rid = dao.insert(name)
-                result = self.__build_role_attributes(rid, name)
-                return jsonify(Role=result), 201
-            else:
-                return jsonify(Error="Unexpected attributes in post request"), 400
+            try:
+                name = form['name']
+                if name:
+                    #dao = PartsDAO()
+                    rid = 0
+                    #rid = dao.insert(name)
+                    result = self.__build_role_attributes(rid, name)
+                    return jsonify(Role=result), 201
+                else:
+                    return jsonify(Error="Attributes must not be null"), 400
+            except:
+                return jsonify(Error = 'Unexpected attributes in post request'), 400
 
 
     def updateRole(self, rid, form):
@@ -58,13 +61,16 @@ class RolesHandler:
             if len(form) != 1:
                 return jsonify(Error="Malformed update request"), 400
             else:
-                name = form['name']
-                if name:
-                    # dao.update(rid, name)
-                    result = self.__build_role_attributes(rid, name)
-                    return jsonify(Role=result), 200
-                else:
-                    return jsonify(Error="Unexpected attributes in update request"), 400
+                try:
+                    name = form['name']
+                    if name:
+                        # dao.update(rid, name)
+                        result = self.__build_role_attributes(rid, name)
+                        return jsonify(Role=result), 200
+                    else:
+                        return jsonify(Error="Attributes must not be null"), 400
+                except:
+                    return jsonify(Error = 'Unexpected attributes in put request'), 400
 
 
     def deleteRole(self, rid):

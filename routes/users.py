@@ -32,5 +32,8 @@ def userSignup():
     #POST handler code
     form = request.json
     reponse = AddressHandler().insertAddress(form['Address'])
-    aid = json.loads(reponse[0].get_data(True))['Address']['address_id']
-    return UserHandler().insertUser(aid, form['User'])
+    if reponse[1] == 201:
+        aid = json.loads(reponse[0].get_data(True))['Address']['address_id']
+        return UserHandler().insertUser(aid, form['User'])
+    else:
+        return reponse
