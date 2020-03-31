@@ -1,8 +1,8 @@
 # DB_project
 
 ## Group Participants
-Eduardo O'Neill
-Fernando Guzman
+Eduardo O'Neill<br />
+Fernando Guzman<br />
 Jaime Torrens
 
 ## Description
