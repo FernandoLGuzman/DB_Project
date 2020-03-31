@@ -1,15 +1,21 @@
 # DB_project
 
+## Group Participants
+Eduardo O'Neill
+Fernando Guzman
+Jaime Torrens
+
 ## Description
 This project is the backend of an application that manages disaster relief supplies for those that need it. 
 
 ## Entity Relationship Diagram
 Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kIPz/view?usp=sharing
+![](diagram.jpg)
 
 ### Entities
 * User
 
-  A user represents an account that will interact with the application. The user has identifying details and contact information such as name, email, password, and phone number. 
+  A user represents an account that will interact with the application. The user has identifying details and contact information such as name, email, password, and phone number. The user would also hold as foreign keys an address id and role id.
    
 * Role
 
@@ -21,15 +27,15 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
   
 * Resource
 
-  A resource is an item that a supplier is providing on the platform. These can be any kind of item. The information stored for each resource is its name, description, price and stock. The stock is the amount of that particular resource that the specific user has. If another user is providing a similar item, they have their own entry and inventory.
+  A resource is an item that a supplier is providing on the platform. These can be any kind of item. The information stored for each resource is its name, description, price and stock. The stock is the amount of that particular resource that the specific user has. If another user is providing a similar item, they have their own entry and inventory. The resource will also hold as foreign keys a supplier id, address id, and category id 
   
 * Category
 
-  A category represents the type of resource that is being supplied. Categories have a name so that users can identify. They can also have subcategories, such that if A is a subcategory of B, then a search for items under category B would also include items in A.
+  A category represents the type of resource that is being supplied. Categories have a name so that users can identify. They can also have subcategories, such that if A is a subcategory of B, then a search for items under category B would also include items in A. In the case that a category is a subcategory then it will hold the id of its parent category as a foreign key.
 
 * Restock Entry
 
-  Whenever a supplier wants to add more inventory (increase the stock of an item), the quantity added and the date is recorded as a restock entry. This helps us determine whether there was enough supply for the demand of an item within certain time frames. The information is useful when calculating statistics based on availability.
+  Whenever a supplier wants to add more inventory (increase the stock of an item), the quantity added and the date is recorded as a restock entry. This helps us determine whether there was enough supply for the demand of an item within certain time frames. The information is useful when calculating statistics based on availability. This entity would hold the quantity, date, and the recource id it points to.
 
 ### Relationships
 
