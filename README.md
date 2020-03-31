@@ -17,7 +17,7 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
   
 * Address
 
-  An address hold the location details for other entities. The information is composed of the physical address as well as the GPS location in terms of latitud and longitud, and the Senate Region.
+  An address hold the location details for other entities. The information is composed of the physical address as well as the GPS location in terms of latitude and longitude, and the Senate Region.
   
 * Resource
 
@@ -29,7 +29,7 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
 
 * Restock Entry
 
-  Whenever a supplier wants to add more inventory(increase the stock of an item), the quantity added and the date is recorded as a restock entry. This helps us determine whether there was enough supply for the demand of an item within certain time frames. The information is useful when calculating statistics based on availability.
+  Whenever a supplier wants to add more inventory (increase the stock of an item), the quantity added and the date is recorded as a restock entry. This helps us determine whether there was enough supply for the demand of an item within certain time frames. The information is useful when calculating statistics based on availability.
 
 ### Relationships
 
@@ -43,7 +43,7 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
 
 * Request
 
-  If an item is not available(no stock), then the item can be requested by the client. The client can request a specific quantity of a resource. A request is not a reservation, it simply represents the demand for an item that is out of stock so that an admin can look at the statistics and see what is needed the most.
+  If an item is not available (no stock), then the item can be requested by the client. The client can request a specific quantity of a resource. A request is not a reservation, it simply represents the demand for an item that is out of stock so that an admin can look at the statistics and see what is needed the most.
   
   **Entity participation:** User, Resource
   
