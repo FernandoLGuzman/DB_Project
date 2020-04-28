@@ -6,6 +6,8 @@ from routes.roles import roles
 
 from flask_cors import CORS, cross_origin
 
+import dao.connection
+
 app = Flask(__name__)
 
 CORS(app)
