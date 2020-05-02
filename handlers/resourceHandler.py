@@ -1,5 +1,6 @@
 from flask import jsonify
 import datetime
+import dao.resource
 
 class ResourceHandler:
 
