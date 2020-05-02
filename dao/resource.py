@@ -16,8 +16,9 @@ class ResourceDao:
         query = ("select * from resources "
                 "order by %s"
                 "limit %s offset %s")
-        
-        cursor.execute(query, (orderBy, limit, offset))
-        print(cursor.fetchone())
 
-# ResourceDao().getAllResources()
+        cursor.execute(query, (orderBy, limit, offset))
+        return cursor.fetchall()
+
+
+print(ResourceDao().getAllResources())
