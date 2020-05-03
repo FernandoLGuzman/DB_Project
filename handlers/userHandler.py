@@ -53,17 +53,12 @@ class UserHandler:
 
     def getUserByID(self, uid):
         dao = UserDao()
-        users_list = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]]
-        # row = dao.getUserByID(uid)
-        # if not row:
-        if False: # hardcoded, delete later
+        row = dao.getUserById(uid)
+        if not row: # hardcoded, delete later
             return jsonify(Error = "Part Not Found"), 404
         else:
-            result_list = []
-            for row in users_list:
-                user = self.__build_user_dict(row)
-                result_list.append(user)
-            return jsonify(User = result_list)
+            user = self.__build_user_dict(row)
+            return jsonify(User = user)
 
 
     def searchUsers(self, args): # can be redesigned based on implementation decisions
