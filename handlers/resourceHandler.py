@@ -94,7 +94,12 @@ class ResourceHandler:
 
     def getResourceById(self, id):
         #dao logic
-        result = self.buildResource([id, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])
+        resource = ResourceDao().getResourceById(id)
+        if not resource:
+            return jsonify(Error = "Resource Not Found"), 404
+            
+        result = self.buildResource(resource)
+        # result = self.buildResource([id, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])
         return jsonify(Resource = result), 200
 
     def getResourceRequests(self, args):
