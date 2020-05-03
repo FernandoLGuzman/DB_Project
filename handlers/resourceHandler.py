@@ -1,20 +1,43 @@
 from flask import jsonify
 import datetime
 import dao.resource
+from dao.resource import ResourceDao
 
 class ResourceHandler:
 
     def buildResource(self, row):
-        resource = {}
+        resource = {
+            'resource_id': row[2],
+            'user_id': row[3],
+            'resource_name': row[4],
+            'description': row[5],
+            'price': row[6],
+            'stock': row[7],
+            'category': {
+                'category_id': row[1],
+                'category_name': row[8],
+                'parent_category': row[9]
+            },
+            'resource_location': {
+                'address_id': row[0],
+                'street_address': row[10],
+                'city': row[11],
+                'country': row[12],
+                'zip_code': row[13],
+                'senate_region': row[14],
+                'latitud': row[15],
+                'longitud': row[16]
+            }
+        }
         #TODO add supplier name and category name for ui to  use 
-        resource['resource_id'] = row[0]
-        resource['supplier_id'] = row[1]
-        resource['address_id'] = row[2]
-        resource['category_id'] = row[3]
-        resource['name'] = row[4]
-        resource['description'] = row[5]
-        resource['price'] = row[6]
-        resource['stock'] = row[7]
+        # resource['resource_id'] = row[0]
+        # resource['supplier_id'] = row[1]
+        # resource['address_id'] = row[2]
+        # resource['category_id'] = row[3]
+        # resource['name'] = row[4]
+        # resource['description'] = row[5]
+        # resource['price'] = row[6]
+        # resource['stock'] = row[7]
         return resource
 
     def buildResourceRequest(self, row):
@@ -36,15 +59,47 @@ class ResourceHandler:
         return purchase
 
     def getResources(self, args):
-        limit = args.get('limit', 50)
-        orderBy = args.get('orderBy', None)
+        userId = args.get('userId', None)
+        senateRegion = args.get('senateRegion', None)
+        categoryId = args.get('categoryId', None)
+        minStock = args.get('minStock', 0)
+        minPrice = args.get('minPrice', 0)
+        maxPrice = args.get('maxPrice', 9999999999999.99)
+        limit = args.get('limit', 25)
+        offset = args.get('offser', 0)
+        orderBy = args.get('orderBy', 'name')
+
+        resourceList = []
+
+        if userId and categoryId:
+            resourceList = ResourceDao().getResourcesByCategoryAndSupplier(categoryId, userId, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        elif categoryId and senateRegion:
+            resourceList = ResourceDao().getResourcesByCategoryAndSenateRegion(categoryId, senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        elif categoryId:
+            resourceList = ResourceDao().getResourcesByCategory(categoryId, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        elif senateRegion:
+            resourceList = ResourceDao().getResourcesBySenateRegion(senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        elif userId:
+            resourceList = ResourceDao().getResourcesBySupplier(userId, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        else:
+            resourceList = ResourceDao().getAllResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+
+        result = []
+        for row in resourceList:
+            result.append(self.buildResource(row))
+
         #dao logic including filtering ordering and limiting
-        result = [self.buildResource([2312, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])]
+        # result = [self.buildResource([2312, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])]
         return jsonify(Resources = result), 200
 
     def getResourceById(self, id):
         #dao logic
-        result = self.buildResource([id, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])
+        resource = ResourceDao().getResourceById(id)
+        if not resource:
+            return jsonify(Error = "Resource Not Found"), 404
+            
+        result = self.buildResource(resource)
+        # result = self.buildResource([id, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])
         return jsonify(Resource = result), 200
 
     def getResourceRequests(self, args):

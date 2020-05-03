@@ -24,20 +24,21 @@ class ResourceDao:
         else:
             return ""
 
-    def getAllResources(self, limit = 25, offset = 0, orderBy = 'name'):
+    def getAllResources(self, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
         cursor = self.connection.cursor()
-        query = ("select * from resources ")
+        query = ("select * from resources natural join categories natural join addresses "
+                "where stock >= %s and price between %s and %s ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
 
-        cursor.execute(query, (limit, offset))
+        cursor.execute(query, (minStock, minPrice, maxPrice, limit, offset))
         result = cursor.fetchall()
         cursor.close()
         return result
 
     def getResourceById(self, resourceId):
         cursor = self.connection.cursor()
-        query = ("select * from resources "
+        query = ("select * from resources natural join categories natural join addresses "
                 "where resource_id = %s ")
 
         cursor.execute(query, (resourceId,))
@@ -45,19 +46,19 @@ class ResourceDao:
         cursor.close()
         return result
 
-    def getResourcesBySupplier(self, supplierId, limit = 25, offset = 0, orderBy = 'name'):
+    def getResourcesBySupplier(self, supplierId, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
         cursor = self.connection.cursor()
-        query = ("select * from resources "
-                "where user_id=%s ")
+        query = ("select * from resources natural join categories natural join addresses "
+                "where user_id=%s and stock >= %s and price between %s and %s ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
 
-        cursor.execute(query, (supplierId, limit, offset))
+        cursor.execute(query, (supplierId, minStock, minPrice, maxPrice, limit, offset))
         result = cursor.fetchall()
         cursor.close()
         return result
 
-    def getResourcesByCategory(self, categoryId, limit = 25, offset = 0, orderBy = 'name'):
+    def getResourcesByCategory(self, categoryId, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
         cursor = self.connection.cursor()
         query = ("with recursive "
                 "category_tree(category_id, parent_category) as "
@@ -66,28 +67,68 @@ class ResourceDao:
                 "union all "
                 "select c.category_id, c.parent_category from category_tree as ct inner join categories as c on ct.category_id=c.parent_category "
                 ") "
-                "select resources.*, category_name "
-                "from resources natural join categories "
-                "where category_id in (select category_id from category_tree) ")
+                "select * "
+                "from resources natural join categories natural join addresses "
+                "where stock >= %s and price between %s and %s and category_id in (select category_id from category_tree) ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
 
-        cursor.execute(query, (categoryId, limit, offset))
+        cursor.execute(query, (categoryId, minStock, minPrice, maxPrice, limit, offset))
         result = cursor.fetchall()
         cursor.close()
         return result
 
-    def getRecourcesBySenateRegion(self, senateRegion, limit = 25, offset = 0, orderBy = 'name'):
+    def getResourcesBySenateRegion(self, senateRegion, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
         cursor = self.connection.cursor()
-        query = ("select r.*, senate_region "
-                "from resources as r natural join addresses as a "
-                "where senate_region=%s ")
+        query = ("select * "
+                "from resources natural join categories natural join addresses "
+                "where senate_region=%s and stock >= %s and price between %s and %s ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
 
-        cursor.execute(query, (senateRegion, limit, offset))
+        cursor.execute(query, (senateRegion, minStock, minPrice, maxPrice, limit, offset))
         result = cursor.fetchall()
         cursor.close()
         return result
 
-print(ResourceDao().getResourcesBySupplier(supplierId=1))
+    def getResourcesByCategoryAndSenateRegion(self, categoryId, senateRegion, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
+        cursor = self.connection.cursor()
+        query = ("with recursive "
+                "category_tree(category_id, parent_category) as "
+                "( "
+                "select category_id, parent_category from categories where parent_category=%s "
+                "union all "
+                "select c.category_id, c.parent_category from category_tree as ct inner join categories as c on ct.category_id=c.parent_category "
+                ") "
+                "select * "
+                "from resources natural join categories natural join addresses "
+                "where senate_region=%s and stock >= %s and price between %s and %s and category_id in (select category_id from category_tree) ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (categoryId, senateRegion, minStock, minPrice, maxPrice, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+    def getResourcesByCategoryAndSupplier(self, categoryId, supplierId, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
+        cursor = self.connection.cursor()
+        query = ("with recursive "
+                "category_tree(category_id, parent_category) as "
+                "( "
+                "select category_id, parent_category from categories where parent_category=%s "
+                "union all "
+                "select c.category_id, c.parent_category from category_tree as ct inner join categories as c on ct.category_id=c.parent_category "
+                ") "
+                "select * "
+                "from resources natural join categories natural join addresses "
+                "where user_id=%s and stock >= %s and price between %s and %s and category_id in (select category_id from category_tree) ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (categoryId, supplierId, minStock, minPrice, maxPrice, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+print(ResourceDao().getResourcesByCategoryAndSupplier(categoryId=1, supplierId=1))
