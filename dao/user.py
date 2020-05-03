@@ -2,13 +2,46 @@ import mysql.connector
 from mysql.connector import Error
 from config.localConfig import mysql as config
 
-# connection = mysql.connector.connect(**config)
+class UserDao:
 
-def getUser():
-    connection = mysql.connector.connect(**config)
-    query = "select * from user;"
-    connection.execute(query)
-    res = []
-    for row in connection:
-        res.append(row)
-    return res 
+    def __init__(self):
+        super().__init__()
+
+        self.connection = mysql.connector.connect(**config)
+
+
+    def orderBy(self, attribute):
+        if attribute == 'First name':
+            return "order by first_name "
+        elif attribute == 'Last name':
+            return "order by last_name "
+        elif attribute == 'email':
+            return "order by email "
+        elif attribute == 'role':
+            return "order by role_id "
+        elif attribute == 'uid':
+            return "order by user_id "
+        else:
+            return ""
+
+
+    def getAllUsers(self, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+        cursor.execute(query, (limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+
+    def getUserById(self, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+        cursor.execute(query, (limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result

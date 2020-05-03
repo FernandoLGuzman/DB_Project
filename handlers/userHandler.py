@@ -1,17 +1,30 @@
 from flask import jsonify
+from dao.user import UserDao
 # from dao.users import UsersDAO
 
 class UserHandler:
     def __build_user_dict(self, row):
         result = {}
-        result['user_id'] = row[0]
-        result['address_id'] = row[1]
-        result['role_id'] = row[2]
+        result['user_id'] = row[2]
         result['first_name'] = row[3]
         result['last_name'] = row[4]
         result['email'] = row[5]
         result['password'] = row[6]
         result['phone_number'] = row[7]
+        result['role'] = {
+            'role_id': row[1],
+            'role_name': row[8]
+        }
+        result['address'] = {
+            'address_id': row[0],
+            'street_address': row[9],
+            'city': row[10],
+            'coutry': row[11],
+            'zip_code': row[12],
+            'senate_region': row[13],
+            'latitud': float(row[14]),
+            'longitud': float(row[15])
+        }
         return result
 
 
@@ -29,9 +42,8 @@ class UserHandler:
 
 
     def getAllUsers(self):
-        # dao = UsersDAO()
-        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]] # hardcoded, delete later
-        # users_list = dao.getAllUsers()
+        dao = UserDao()
+        users_list = dao.getAllUsers()
         result_list = []
         for row in users_list:
             result = self.__build_user_dict(row)
@@ -40,7 +52,7 @@ class UserHandler:
 
 
     def getUserByID(self, uid):
-        # dao = UsersDAO()
+        dao = UserDao()
         users_list = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]]
         # row = dao.getUserByID(uid)
         # if not row:
