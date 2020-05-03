@@ -27,7 +27,7 @@ class UserDao:
 
     def getAllUsers(self, limit = 25, offset = 0, orderBy = 'uid'):
         cursor = self.connection.cursor()
-        query = ("select * from users natural join roles natural join addresses ")
+        query = ("select * from users natural join roles natural join addresses natural join senate_region ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
         cursor.execute(query, (limit, offset))
@@ -38,7 +38,7 @@ class UserDao:
 
     def getUserById(self, userID):
         cursor = self.connection.cursor()
-        query = ("select * from users natural join roles natural join addresses "
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
         "where user_id = %s ")
         cursor.execute(query, (userID,))
         result = cursor.fetchone()

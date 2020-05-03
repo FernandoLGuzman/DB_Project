@@ -5,23 +5,26 @@ from dao.user import UserDao
 class UserHandler:
     def __build_user_dict(self, row):
         result = {}
-        result['user_id'] = row[2]
-        result['first_name'] = row[3]
-        result['last_name'] = row[4]
-        result['email'] = row[5]
-        result['password'] = row[6]
-        result['phone_number'] = row[7]
+        result['user_id'] = row[3]
+        result['first_name'] = row[4]
+        result['last_name'] = row[5]
+        result['email'] = row[6]
+        result['password'] = row[7]
+        result['phone_number'] = row[8]
         result['role'] = {
-            'role_id': row[1],
-            'role_name': row[8]
+            'role_id': row[2],
+            'role_name': row[9]
         }
         result['address'] = {
-            'address_id': row[0],
-            'street_address': row[9],
-            'city': row[10],
-            'coutry': row[11],
-            'zip_code': row[12],
-            'senate_region': row[13],
+            'address_id': row[1],
+            'street_address': row[10],
+            'city': row[11],
+            'coutry': row[12],
+            'zip_code': row[13],
+            'senate_region': {
+                'region_id': row[0],
+                'name': row[16]
+            },
             'latitud': float(row[14]),
             'longitud': float(row[15])
         }
@@ -55,7 +58,7 @@ class UserHandler:
         dao = UserDao()
         row = dao.getUserById(uid)
         if not row: # hardcoded, delete later
-            return jsonify(Error = "Part Not Found"), 404
+            return jsonify(Error = "User Not Found"), 404
         else:
             user = self.__build_user_dict(row)
             return jsonify(User = user)
