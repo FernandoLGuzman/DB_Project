@@ -7,26 +7,29 @@ class ResourceHandler:
 
     def buildResource(self, row):
         resource = {
-            'resource_id': row[2],
-            'user_id': row[3],
-            'resource_name': row[4],
-            'description': row[5],
-            'price': row[6],
-            'stock': row[7],
+            'resource_id': row[3],
+            'user_id': row[4],
+            'resource_name': row[5],
+            'description': row[6],
+            'price': float(row[7]),
+            'stock': row[8],
             'category': {
-                'category_id': row[1],
-                'category_name': row[8],
-                'parent_category': row[9]
+                'category_id': row[2],
+                'category_name': row[9],
+                'parent_category': row[10]
             },
             'resource_location': {
-                'address_id': row[0],
-                'street_address': row[10],
-                'city': row[11],
-                'country': row[12],
-                'zip_code': row[13],
-                'senate_region': row[14],
-                'latitud': row[15],
-                'longitud': row[16]
+                'address_id': row[1],
+                'street_address': row[11],
+                'city': row[12],
+                'country': row[13],
+                'zip_code': row[14],
+                'latitud': float(row[15]),
+                'longitud': float(row[16]),
+                'senate_region':{
+                    'region_id': row[0],
+                    'name': row[17]
+                }
             }
         }
         #TODO add supplier name and category name for ui to  use 
