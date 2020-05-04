@@ -54,3 +54,68 @@ class UserDao:
         result = cursor.fetchone()
         cursor.close()
         return result
+
+
+    def getUsersByRoleID(self, roleID, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
+                "where role_id=%s ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (roleID, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+
+    def getUsersByRoleName(self, roleName, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
+                "where role_name=%s ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (roleName, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+
+    def getUsersByFullName(self, fname, lname, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
+                "where first_name=%s and last_name=%s ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (fname, lname, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+
+    def getUsersByEmail(self, email, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
+                "where email=%s ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (email, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+
+    def getUsersByPhoneNumber(self, number, limit = 25, offset = 0, orderBy = 'uid'):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
+                "where phone_number=%s ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (number, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result

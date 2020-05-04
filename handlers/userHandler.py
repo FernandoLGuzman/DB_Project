@@ -69,17 +69,21 @@ class UserHandler:
         lname = args.get("last_name")
         email = args.get("email")
         phone_number = args.get("phone_number")
-        # dao = UsersDAO()
-        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]] # hardcoded, empty later
+        role_name = args.get("role_name")
+        rid = args.get("role_id")
+        dao = UserDao()
+        users_list = []
         if (len(args) == 2) and fname and lname:
-            # users_list = dao.getUsersByLastName(lname)
-            print("Searching Users by First and Last Name") # hardcoded
+            users_list = dao.getUsersByFullName(fname=fname, lname=lname)
         elif (len(args) == 1) and email:
-            # users_list = dao.getUsersByEmail(email)
-            print("Searching Users by Email") # hardcoded
+            users_list = dao.getUsersByEmail(email)
         elif (len(args) == 1) and phone_number:
-            # users_list = dao.getUsersByPhoneNumber(phone_number)
-            print("Getting Users by Phone Number") # hardcoded
+            users_list = dao.getUsersByPhoneNumber(phone_number)
+        elif (len(args) == 1) and (role_name or rid):
+            if role_name:
+                users_list = dao.getUsersByRoleName(roleName = role_name)
+            else:
+                users_list = dao.getUsersByRoleID(roleID=rid)
         else:
             return jsonify(Error = "Malformed query string"), 400
         result_list = []
@@ -89,14 +93,14 @@ class UserHandler:
         return jsonify(Users = result_list)
 
 
-    def getRolebyUserID(self, uid):
-        # dao = UsersDAO()
-        # if not dao.getUserByID(uid):
-            # return jsonify(Error = "User not found."), 404
-        # role = dao.getRolebyUserID(uid)
-        role = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]] #hardcoded, delete later
-        result = self.build_role_dict(role)
-        return jsonify(Role = result)
+    # def getRolebyUserID(self, uid):
+    #     # dao = UsersDAO()
+    #     # if not dao.getUserByID(uid):
+    #         # return jsonify(Error = "User not found."), 404
+    #     # role = dao.getRolebyUserID(uid)
+    #     role = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]] #hardcoded, delete later
+    #     result = self.build_role_dict(role)
+    #     return jsonify(Role = result)
 
 
     def loginUser(self, form):
