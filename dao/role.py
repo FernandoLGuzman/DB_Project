@@ -42,11 +42,11 @@ class RoleDao:
         cursor.close()
         return result
 
-    def getRoleByUser(self, uid):
+    def getRoleByUser(self, userID):
         cursor = self.connection.cursor()
-        query = ("select user_id, role_id, role_name from users natural join roles "
+        query = ("select * from users natural join roles "
         "where user_id = %s ")
-        cursor.execute(query, uid)
+        cursor.execute(query, userID)
         result = cursor.fetchone()
         cursor.close()
         return result
