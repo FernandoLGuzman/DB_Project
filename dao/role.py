@@ -13,8 +13,8 @@ class RoleDao:
             return "order by role_id"
         elif attribute == 'uid':
             return "order by user_id"
-        elif attribute == 'name':
-            return "order by name"
+        elif attribute == 'rname':
+            return "order by role_name"
         else:
             return ""
     
