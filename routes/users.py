@@ -7,7 +7,10 @@ users = Blueprint('users', __name__)
 @users.route('/', methods = ['GET'])
 def user():
     #GET handler code
-    return UserHandler().getAllUsers()
+    if len(request.args) == 0:
+        return UserHandler().getAllUsers()
+    else:
+        return UserHandler().searchUsers(request.args)
 
 @users.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def userById(id):

@@ -1,17 +1,49 @@
 from flask import jsonify
+from dao.user import UserDao
+from dao.payment import PaymentDao
 # from dao.users import UsersDAO
 
 class UserHandler:
     def __build_user_dict(self, row):
         result = {}
-        result['user_id'] = row[0]
-        result['address_id'] = row[1]
-        result['role_id'] = row[2]
-        result['first_name'] = row[3]
-        result['last_name'] = row[4]
-        result['email'] = row[5]
-        result['password'] = row[6]
-        result['phone_number'] = row[7]
+        userID = row[3]
+        result['user_id'] = userID
+        result['first_name'] = row[4]
+        result['last_name'] = row[5]
+        result['email'] = row[6]
+        result['password'] = row[7]
+        result['phone_number'] = row[8]
+        result['role'] = {
+            'role_id': row[2],
+            'role_name': row[9]
+        }
+        result['address'] = {
+            'address_id': row[1],
+            'street_address': row[10],
+            'city': row[11],
+            'coutry': row[12],
+            'zip_code': row[13],
+            'senate_region': {
+                'region_id': row[0],
+                'name': row[16]
+            },
+            'latitud': float(row[14]),
+            'longitud': float(row[15])
+        }
+        dao = PaymentDao()
+        plist = dao.getPaymentMethodsByUserId(userID)
+        if plist:
+            arr = []
+            for line in plist:
+                method =  {
+                    'payment_method_id': line[0],
+                    'type': line[2],
+                    'wallet': float(line[3])
+                }
+                arr.append(method)
+            result['payment_methods'] = arr
+        else:
+            result['payment_methods'] = None
         return result
 
 
@@ -29,9 +61,8 @@ class UserHandler:
 
 
     def getAllUsers(self):
-        # dao = UsersDAO()
-        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]] # hardcoded, delete later
-        # users_list = dao.getAllUsers()
+        dao = UserDao()
+        users_list = dao.getAllUsers()
         result_list = []
         for row in users_list:
             result = self.__build_user_dict(row)
@@ -40,18 +71,13 @@ class UserHandler:
 
 
     def getUserByID(self, uid):
-        # dao = UsersDAO()
-        users_list = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]]
-        # row = dao.getUserByID(uid)
-        # if not row:
-        if False: # hardcoded, delete later
-            return jsonify(Error = "Part Not Found"), 404
+        dao = UserDao()
+        row = dao.getUserById(uid)
+        if not row: # hardcoded, delete later
+            return jsonify(Error = "User Not Found"), 404
         else:
-            result_list = []
-            for row in users_list:
-                user = self.__build_user_dict(row)
-                result_list.append(user)
-            return jsonify(User = result_list)
+            user = self.__build_user_dict(row)
+            return jsonify(User = user)
 
 
     def searchUsers(self, args): # can be redesigned based on implementation decisions
@@ -59,17 +85,21 @@ class UserHandler:
         lname = args.get("last_name")
         email = args.get("email")
         phone_number = args.get("phone_number")
-        # dao = UsersDAO()
-        users_list = [[1, 2, 3, "name", "lname", "@yahoo", "123", "787"]] # hardcoded, empty later
+        role_name = args.get("role_name")
+        rid = args.get("role_id")
+        dao = UserDao()
+        users_list = []
         if (len(args) == 2) and fname and lname:
-            # users_list = dao.getUsersByLastName(lname)
-            print("Searching Users by First and Last Name") # hardcoded
+            users_list = dao.getUsersByFullName(fname=fname, lname=lname)
         elif (len(args) == 1) and email:
-            # users_list = dao.getUsersByEmail(email)
-            print("Searching Users by Email") # hardcoded
+            users_list = dao.getUsersByEmail(email)
         elif (len(args) == 1) and phone_number:
-            # users_list = dao.getUsersByPhoneNumber(phone_number)
-            print("Getting Users by Phone Number") # hardcoded
+            users_list = dao.getUsersByPhoneNumber(phone_number)
+        elif (len(args) == 1) and (role_name or rid):
+            if role_name:
+                users_list = dao.getUsersByRoleName(roleName = role_name)
+            else:
+                users_list = dao.getUsersByRoleID(roleID=rid)
         else:
             return jsonify(Error = "Malformed query string"), 400
         result_list = []
@@ -79,33 +109,35 @@ class UserHandler:
         return jsonify(Users = result_list)
 
 
-    def getRolebyUserID(self, uid):
-        # dao = UsersDAO()
-        # if not dao.getUserByID(uid):
-            # return jsonify(Error = "User not found."), 404
-        # role = dao.getRolebyUserID(uid)
-        role = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]] #hardcoded, delete later
-        result = self.build_role_dict(role)
-        return jsonify(Role = result)
+    # def getRolebyUserID(self, uid):
+    #     # dao = UsersDAO()
+    #     # if not dao.getUserByID(uid):
+    #         # return jsonify(Error = "User not found."), 404
+    #     # role = dao.getRolebyUserID(uid)
+    #     role = [[uid, 2, 3, "name", "lname", "@yahoo", "123", "787"]] #hardcoded, delete later
+    #     result = self.build_role_dict(role)
+    #     return jsonify(Role = result)
 
 
     def loginUser(self, form):
-        # find user with email and password from db
-        if False:
-            return jsonify(Error = "Incorrect email or password"), 400
+        if len(form) != 2:
+            return jsonify(Error = "Malformed login request."), 400
         else:
-            if len(form) != 2:
-                return jsonify(Error = "Malformed login request."), 400
-            else:
-                try:
-                    email = form['email']
-                    password = form['password']
-                    if email and password:
-                        return self.getUserByID(1)
+            try:
+                email = form['email']
+                password = form['password']
+                if email and password:
+                    dao = UserDao()
+                    row = dao.loginUser(email,password)
+                    if not row:
+                        return jsonify(Error = "Incorrect email or password"), 400
                     else:
-                        return jsonify(Error = "Attributes must not be null"), 400
-                except:
-                    return jsonify(Error = 'Unexpected attributes in get request'), 400
+                        user = self.__build_user_dict(row)
+                        return jsonify(User = user)
+                else:
+                    return jsonify(Error = "Attributes must not be null"), 400
+            except:
+                return jsonify(Error = 'Unexpected attributes in get request'), 400
 
 
     def insertUser(self, aid, form):
