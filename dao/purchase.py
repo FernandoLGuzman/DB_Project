@@ -85,13 +85,14 @@ class PurchaseDao:
         cursor.close()
         return result
 
-    # assuming only one is possible. If many, add things that make it fetch all.
-    def getPurchaseByUserIDAndResourceID(self, uid, resid):
+    def getPurchaseByUserIDAndResourceID(self, uid, resid, limit = 25, offset = 0, orderBy = 'PID'):
         cursor = self.connection.cursor()
         query = ("select * from purchases natural join users natural join resources "
         "where user_id = %s and resource_id = %s ")
-        cursor.execute(query, (uid, resid))
-        result = cursor.fetchone()
+        query += self.orderBy(orderBy)
+        query += "limit %s offset %s "
+        cursor.execute(query, (uid, resid, limit, offset))
+        result = cursor.fetchall()
         cursor.close()
         return result
 

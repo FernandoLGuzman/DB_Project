@@ -93,12 +93,14 @@ class RequestDao:
         return result
 
     # assuming only one is possible. If many, add things that make it fetch all.
-    def getRequestByUserIDAndResourceID(self, uid, resid):
+    def getRequestByUserIDAndResourceID(self, uid, resid, limit = 25, offset = 0, orderBy = 'ReqID'):
         cursor = self.connection.cursor()
         query = ("select * from requests natural join users natural join resources "
         "where user_id = %s and resource_id = %s ")
-        cursor.execute(query, (uid, resid))
-        result = cursor.fetchone()
+        query += self.orderBy(orderBy)
+        query += "limit %s offset %s "
+        cursor.execute(query, (uid, resid, limit, offset))
+        result = cursor.fetchall()
         cursor.close()
         return result
 
