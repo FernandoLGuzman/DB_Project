@@ -16,6 +16,10 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
 * User
 
   A user represents an account that will interact with the application. The user has identifying details and contact information such as name, email, password, and phone number. The user would also hold as foreign keys an address id and role id.
+
+* Payment Method
+
+  A payment method represent the way that the user will pay for the resources that they will receive. It holds the information like the type and wallet amount
    
 * Role
 
@@ -24,6 +28,10 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
 * Address
 
   An address holds the location details for other entities. The information is composed of the physical address as well as the GPS location in terms of latitude and longitude, and the Senate Region.
+
+* Senate Region
+
+  There are 8 senate regions in Puerto Rico and the table will hold the name of these regions
   
 * Resource
 
@@ -86,7 +94,22 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
   **Entity participation:** Resource, Address (Total participation on the Resource)
   
   **Relationship Type:** One to Many. Every resource must have a single address. Many resources can be located at the same address.
+
+* Address Region
+
+  This relationship indicated that an address is a part of one of the 8 senate regions in Puerto Rico.
+
+  **Entity participation:** Senate Region, Address (Total participation on the Address)
   
+  **Relationship Type:** One to Many. Every Address must have a single Senate Region. Many addresses can be located at the same Senate Region.
+
+  * User Payment
+
+  This relationship indicated that a user can have one or many payment methods. This will be used to keep track of the user's wallet amount and keep a record of the types of ways that that user can pay.
+
+  **Entity participation:** Payment Methos, User (Total participation on the Payment Method)
+  
+  **Relationship Type:** Many to one. Every Payment Methid must have a User. A User can have many Payment Methods.  
 * Other
 
   + User - Role
