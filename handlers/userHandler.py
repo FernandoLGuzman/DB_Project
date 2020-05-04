@@ -1,11 +1,13 @@
 from flask import jsonify
 from dao.user import UserDao
+from dao.payment import PaymentDao
 # from dao.users import UsersDAO
 
 class UserHandler:
     def __build_user_dict(self, row):
         result = {}
-        result['user_id'] = row[3]
+        userID = row[3]
+        result['user_id'] = userID
         result['first_name'] = row[4]
         result['last_name'] = row[5]
         result['email'] = row[6]
@@ -28,6 +30,20 @@ class UserHandler:
             'latitud': float(row[14]),
             'longitud': float(row[15])
         }
+        dao = PaymentDao()
+        plist = dao.getPaymentMethodsByUserId(userID)
+        if plist:
+            arr = []
+            for line in plist:
+                method =  {
+                    'payment_method_id': line[0],
+                    'type': line[2],
+                    'wallet': float(line[3])
+                }
+                arr.append(method)
+            result['payment_methods'] = arr
+        else:
+            result['payment_methods'] = None
         return result
 
 
