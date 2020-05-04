@@ -44,3 +44,13 @@ class UserDao:
         result = cursor.fetchone()
         cursor.close()
         return result
+
+    
+    def loginUser(self, email, password):
+        cursor = self.connection.cursor()
+        query = ("select * from users natural join roles natural join addresses natural join senate_region "
+        "where email = %s and password = %s")
+        cursor.execute(query, (email, password))
+        result = cursor.fetchone()
+        cursor.close()
+        return result

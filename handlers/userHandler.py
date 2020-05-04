@@ -100,22 +100,24 @@ class UserHandler:
 
 
     def loginUser(self, form):
-        # find user with email and password from db
-        if False:
-            return jsonify(Error = "Incorrect email or password"), 400
+        if len(form) != 2:
+            return jsonify(Error = "Malformed login request."), 400
         else:
-            if len(form) != 2:
-                return jsonify(Error = "Malformed login request."), 400
-            else:
-                try:
-                    email = form['email']
-                    password = form['password']
-                    if email and password:
-                        return self.getUserByID(1)
+            try:
+                email = form['email']
+                password = form['password']
+                if email and password:
+                    dao = UserDao()
+                    row = dao.loginUser(email,password)
+                    if not row:
+                        return jsonify(Error = "Incorrect email or password"), 400
                     else:
-                        return jsonify(Error = "Attributes must not be null"), 400
-                except:
-                    return jsonify(Error = 'Unexpected attributes in get request'), 400
+                        user = self.__build_user_dict(row)
+                        return jsonify(User = user)
+                else:
+                    return jsonify(Error = "Attributes must not be null"), 400
+            except:
+                return jsonify(Error = 'Unexpected attributes in get request'), 400
 
 
     def insertUser(self, aid, form):
