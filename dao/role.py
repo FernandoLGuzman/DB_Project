@@ -11,8 +11,6 @@ class RoleDao:
     def orderBy(self, attribute):
         if attribute == 'rid':
             return "order by role_id"
-        elif attribute == 'uid':
-            return "order by user_id"
         elif attribute == 'rname':
             return "order by role_name"
         else:
@@ -30,7 +28,7 @@ class RoleDao:
     
     def getRoleById(self, roleID):
         cursor = self.connection.cursor()
-        query = ("select role_id, role_name from roles where role_id = %s")
+        query = ("select * from roles where role_id = %s")
         cursor.execute(query, roleID)
         result = cursor.fetchone()
         cursor.close()
@@ -38,8 +36,17 @@ class RoleDao:
     
     def getRoleByName(self, roleName):
         cursor = self.connection.cursor()
-        query = ("select role_name, role_id from roles where role_name = %s")
+        query = ("select * from roles where role_name = %s")
         cursor.execute(query, roleName)
+        result = cursor.fetchone()
+        cursor.close()
+        return result
+
+    def getRoleByUser(self, uid):
+        cursor = self.connection.cursor()
+        query = ("select user_id, role_id, role_name from users natural join roles "
+        "where user_id = %s")
+        cursor.execute(query, uid)
         result = cursor.fetchone()
         cursor.close()
         return result
