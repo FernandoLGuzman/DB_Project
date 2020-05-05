@@ -4,18 +4,18 @@ from dao.request import RequestDao
 class RequestHandler:
     def buildRequest(self, row):
         request = {
-        'request_id': row[2],
-        'user_id': row[0],
-        'resource_id': row[1],
+        'request_id': row[1],
+        'user_id': row[2],
+        'resource_id': row[0],
         'quantity': row[3],
         'date': row[4],
         'is_satisfied': row[5],
-        'address_id': row[6],
-        'category_id': row[7],
-        'resource_name': row[8],
-        'description': row[9],
-        'price': float(row[10]),
-        'stock': row[11]
+        'address_id': row[7],
+        'category_id': row[8],
+        'resource_name': row[9],
+        'description': row[10],
+        'price': float(row[11]),
+        'stock': row[12]
         }
         return request
 
