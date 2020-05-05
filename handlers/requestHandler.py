@@ -14,7 +14,7 @@ class RequestHandler:
         'category_id': row[8],
         'resource_name': row[9],
         'description': row[10],
-        'price': float(row[11]),
+        # 'price': float(row[11]),
         'stock': row[12]
         }
         return request
