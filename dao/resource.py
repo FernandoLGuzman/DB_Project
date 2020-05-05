@@ -149,11 +149,12 @@ class ResourceDao:
         query = ("select * "
                 "from resources natural join categories natural join addresses natural join senate_region "
                 "where stock >= %s and price between %s and %s "
-                "and match(resource_name, description) against (%s) ")
+                "and (match(resource_name, description) against (%s) or "
+                "match(category_name) against (%s)) ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
 
-        cursor.execute(query, (minStock, minPrice, maxPrice, keywords, limit, offset))
+        cursor.execute(query, (minStock, minPrice, maxPrice, keywords, keywords, limit, offset))
         result = cursor.fetchall()
         cursor.close()
         return result
