@@ -7,8 +7,17 @@ users = Blueprint('users', __name__)
 @users.route('/', methods = ['GET'])
 def user():
     #GET handler code
+    limit = request.args.get('limit')
+    offset = request.args.get('offset')
+    orderBy = request.args.get('orderBy')
     if len(request.args) == 0:
-        return UserHandler().getAllUsers()
+        return UserHandler().getAllUsers(request.args)
+    elif len(request.args) == 1 and (limit or offset or orderBy):
+        return UserHandler().getAllUsers(request.args)
+    elif len(request.args) == 2 and ((limit and offset) or (limit and orderBy) or (offset and orderBy)):
+        return UserHandler().getAllUsers(request.args)
+    elif len(request.args) == 3 and (limit and offset and orderBy):
+        return UserHandler().getAllUsers(request.args)
     else:
         return UserHandler().searchUsers(request.args)
 

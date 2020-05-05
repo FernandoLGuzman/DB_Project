@@ -60,9 +60,14 @@ class UserHandler:
         return result
 
 
-    def getAllUsers(self):
+    def getAllUsers(self, args):
+        limit = args.get('limit', 25)
+        offset = args.get('offset', 0)
+        orderBy = args.get('orderBy', 'uid')
+        limit = int(limit)
+        offset = int(offset)
         dao = UserDao()
-        users_list = dao.getAllUsers()
+        users_list = dao.getAllUsers(limit,offset,orderBy)
         result_list = []
         for row in users_list:
             result = self.__build_user_dict(row)
@@ -87,19 +92,31 @@ class UserHandler:
         phone_number = args.get("phone_number")
         role_name = args.get("role_name")
         rid = args.get("role_id")
+        extra = 0
+        if args.get('limit'):
+            extra = extra + 1
+        if args.get('offset'):
+            extra = extra + 1
+        if args.get('orderBy'):
+            extra = extra + 1
+        limit = args.get('limit', 25)
+        offset = args.get('offset', 0)
+        orderBy = args.get('orderBy', 'uid')
+        limit = int(limit)
+        offset = int(offset)
         dao = UserDao()
         users_list = []
-        if (len(args) == 2) and fname and lname:
-            users_list = dao.getUsersByFullName(fname=fname, lname=lname)
-        elif (len(args) == 1) and email:
-            users_list = dao.getUsersByEmail(email)
-        elif (len(args) == 1) and phone_number:
-            users_list = dao.getUsersByPhoneNumber(phone_number)
-        elif (len(args) == 1) and (role_name or rid):
+        if (len(args) == 2 + extra) and fname and lname:
+            users_list = dao.getUsersByFullName(fname=fname, lname=lname,limit=limit,offset=offset,orderBy=orderBy)
+        elif (len(args) == 1 + extra) and email:
+            users_list = dao.getUsersByEmail(email,limit,offset,orderBy)
+        elif (len(args) == 1 + extra) and phone_number:
+            users_list = dao.getUsersByPhoneNumber(phone_number,limit,offset,orderBy)
+        elif (len(args) == 1 + extra) and (role_name or rid):
             if role_name:
-                users_list = dao.getUsersByRoleName(roleName = role_name)
+                users_list = dao.getUsersByRoleName(roleName = role_name,limit=limit,offset=offset,orderBy=orderBy)
             else:
-                users_list = dao.getUsersByRoleID(roleID=rid)
+                users_list = dao.getUsersByRoleID(roleID=rid,limit=limit,offset=offset,orderBy=orderBy)
         else:
             return jsonify(Error = "Malformed query string"), 400
         result_list = []

@@ -11,9 +11,9 @@ class UserDao:
 
 
     def orderBy(self, attribute):
-        if attribute == 'First name':
+        if attribute == 'firstName':
             return "order by first_name "
-        elif attribute == 'Last name':
+        elif attribute == 'lastName':
             return "order by last_name "
         elif attribute == 'email':
             return "order by email "
