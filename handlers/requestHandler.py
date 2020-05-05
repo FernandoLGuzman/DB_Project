@@ -10,6 +10,7 @@ class RequestHandler:
         request['quantity'] = row[3]
         request['date'] = row[4]
         request['is_satisfied'] = row[5]
+        return request
 
     def getRequests(self, args):
         userId = args.get('userId', None)
