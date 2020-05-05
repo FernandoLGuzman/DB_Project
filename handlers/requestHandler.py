@@ -41,9 +41,9 @@ class RequestHandler:
         elif not userId and not resourceId and not resourceName and date and not isSatisfied:
             requestList = RequestDao().getRequestsByDate(date, limit, offset, orderBy)
         elif not userId and not resourceId and not resourceName and not date and isSatisfied:
-            if isSatisfied == 0:
+            if int(isSatisfied) == 0:
                 requestList = RequestDao().getAllUnsatisfiedRequests(limit, offset, orderBy)
-            elif isSatisfied == 1:
+            elif int(isSatisfied) == 1:
                 requestList = RequestDao().getAllSatisfiedRequests(limit, offset, orderBy)
             else:
                 return jsonify(Error = "Wrong isSatisfied parameter"), 400 # may not be correct code or way to do this
