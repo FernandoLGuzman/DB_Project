@@ -3,6 +3,7 @@ from mysql.connector import Error
 from config.localConfig import mysql as config
 
 class RoleDao:
+    
     def __init__(self):
         super().__init__()
 
@@ -18,7 +19,7 @@ class RoleDao:
     
     def getAllRoles(self, limit = 25, offset = 0, orderBy = 'rid'):
         cursor = self.connection.cursor()
-        query = ("select * from roles")
+        query = ("select * from roles ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
         cursor.execute(query, (limit, offset))

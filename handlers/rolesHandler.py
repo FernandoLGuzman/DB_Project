@@ -22,25 +22,27 @@ class RolesHandler:
         limit = args.get('limit', 25)
         offset = args.get('offset', 0)
         orderBy = args.get('orderBy', 'rid')
-
+        dao = RoleDao()
         roleList = []
+        result = []
         if roleName and not userId:
-            roleList = RoleDao.getRoleByName(roleName)
+            roleList = dao.getRoleByName(roleName)
+            result.append(self.__build_role_dict(roleList))
         elif not roleName and userId:
-            roleList = RoleDao.getRoleByUser(userId)
+            roleList = dao.getRoleByUser(userId)
+            result.append(self.__build_role_dict(roleList))
         elif not roleName and not userId:
-            roleList = RoleDao.getAllRoles(limit, offset, orderBy)
+            roleList = dao.getAllRoles(limit,offset,orderBy)
+            for row in roleList:
+                result.append(self.__build_role_dict(row))
         else:
             return jsonify(Error = "Malformed get request"), 400
-
-        result = []
-        for row in roleList:
-            result.append(self.__build_role_dict(row))
 
         return jsonify(Roles = result), 200
 
     def getRoleById(self, rid):
-        role = RoleDao.getRoleById(rid)
+        dao = RoleDao()
+        role = dao.getRoleById(rid)
         if not role:
             return jsonify(Error = "Role Not Found"), 404
         result = self.__build_role_dict(role)
