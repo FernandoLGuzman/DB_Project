@@ -71,12 +71,21 @@ class ResourceHandler:
 
         elif categoryId and senateRegion and not userId and not requested and not keywords:
             resourceList = ResourceDao().getResourcesByCategoryAndSenateRegion(categoryId, senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
-        
-        elif requested and not categoryId and not userId and not senateRegion and not keywords:
+
+        # elif requested and keywords and not categoryId and senateRegion and not userId:
+        #     resourceList = ResourceDao().getRequestedResourcesByKeywords(keywords, minStock, minPrice, maxPrice, limit, offset, orderBy)
+
+        elif requested and not categoryId and not userId and not senateRegion:
             if requested == 'true':
-                resourceList = ResourceDao().getAllRequestedResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+                if not keywords:
+                    resourceList = ResourceDao().getAllRequestedResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+                else:
+                    resourceList = ResourceDao().getRequestedResourcesByKeywords(keywords, minStock, minPrice, maxPrice, limit, offset, orderBy)
             elif requested == 'false':
-                resourceList = ResourceDao().getAllUnrequestedResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+                if not keywords:
+                    resourceList = ResourceDao().getAllUnrequestedResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+                else:
+                    resourceList = ResourceDao().getUnrequestedResourcesByKeywords(keywords, minStock, minPrice, maxPrice, limit, offset, orderBy)
             else:
                 return jsonify(Error = "Malformed get request"), 400
         
