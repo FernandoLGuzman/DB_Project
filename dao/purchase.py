@@ -52,7 +52,6 @@ class PurchaseDao:
         cursor.close()
         return result
 
-    # TODO fix either this or price name
     def getPurchasesByPrice(self, price, limit = 25, offset = 0, orderBy = "priceDESC"):
         cursor = self.connection.cursor()
         query = ("select * from purchases natural join resources "
