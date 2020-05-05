@@ -72,9 +72,6 @@ class ResourceHandler:
         elif categoryId and senateRegion and not userId and not requested and not keywords:
             resourceList = ResourceDao().getResourcesByCategoryAndSenateRegion(categoryId, senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
 
-        # elif requested and keywords and not categoryId and senateRegion and not userId:
-        #     resourceList = ResourceDao().getRequestedResourcesByKeywords(keywords, minStock, minPrice, maxPrice, limit, offset, orderBy)
-
         elif requested and not categoryId and not userId and not senateRegion:
             if requested == 'true':
                 if not keywords:
