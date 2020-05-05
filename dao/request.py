@@ -20,7 +20,7 @@ class RequestDao:
 
     def getAllRequests(self, limit = 25, offset = 0, orderBy = 'ReqID'):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources ")
+        query = ("select * from requests natural join resources ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
         cursor.execute(query, (limit, offset))
@@ -30,7 +30,7 @@ class RequestDao:
 
     def getRequestByID(self, reqid):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where request_id = %s ")
         cursor.execute(query, (reqid,))
         result = cursor.fetchone()
@@ -39,7 +39,7 @@ class RequestDao:
 
     def getAllUnsatisfiedRequests(self, limit = 25, offset = 0, orderBy = 'ReqID'):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where is_satisfied = 0 ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -50,7 +50,7 @@ class RequestDao:
 
     def getAllSatisfiedRequests(self, limit = 25, offset = 0, orderBy = 'ReqID'):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where is_satisfied = 1 ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -61,7 +61,7 @@ class RequestDao:
 
     def getRequestsByDate(self, date, limit = 25, offset = 0, orderBy = "ReqID"):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where date = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -72,7 +72,7 @@ class RequestDao:
 
     def getRequestsByUserID(self, uid, limit = 25, offset = 0, orderBy = "ReqID"):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where user_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -83,7 +83,7 @@ class RequestDao:
 
     def getRequestsByResourceID(self, rid, limit = 25, offset = 0, orderBy = "ReqID"):
         cursor = self.connection.cursor()
-        query = ("select * form requests natural join users natural join resources "
+        query = ("select * form requests natural join resources "
         "where resource_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -94,7 +94,7 @@ class RequestDao:
 
     def getRequestsByUserIDAndResourceID(self, uid, resid, limit = 25, offset = 0, orderBy = 'ReqID'):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where user_id = %s and resource_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -105,7 +105,7 @@ class RequestDao:
 
     def getRequestsByResourceName(self, rname, limit = 25, offset = 0, orderBy = "ResName"):
         cursor = self.connection.cursor()
-        query = ("select * from requests natural join users natural join resources "
+        query = ("select * from requests natural join resources "
         "where resource_name = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s " 

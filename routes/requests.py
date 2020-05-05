@@ -7,18 +7,18 @@ requests = Blueprint('requests', __name__)
 # GETs should be good, though
 
 @requests.route('/', methods = ['GET', 'POST'])
-def request():
+def requestR(): # request() already taken
     if request.method == 'GET':
         print(request.args)
-        return RequestHandler.getRequests(request.args)
+        return RequestHandler().getRequests(request.args)
     elif request.method == 'POST':
-        return RequestHandler.insertRequest(request.json)
+        return RequestHandler().insertRequest(request.json)
 
 @requests.route('/<int:id>',methods = ['GET', 'PUT', 'DELETE'])
 def requestById(id):
     if request.method == 'GET':
-        return RequestHandler.getRequestById(id)
+        return RequestHandler().getRequestById(id)
     elif request.method == 'PUT':
-        return RequestHandler.updateRequest(id, request.json)
+        return RequestHandler().updateRequest(id, request.json)
     elif request.method == 'DELETE':
-        return RequestHandler.deleteRequest(id)
+        return RequestHandler().deleteRequest(id)
