@@ -36,7 +36,7 @@ class PurchaseDao:
         cursor = self.connection.cursor()
         query = ("select * from purchases natural join users natural join resources "
         "where request_id = %s ")
-        cursor.execute(query, pid)
+        cursor.execute(query, (pid,))
         result = cursor.fetchone()
         cursor.close()
         return result
@@ -85,7 +85,7 @@ class PurchaseDao:
         cursor.close()
         return result
 
-    def getPurchaseByUserIDAndResourceID(self, uid, resid, limit = 25, offset = 0, orderBy = 'PID'):
+    def getPurchasesByUserIDAndResourceID(self, uid, resid, limit = 25, offset = 0, orderBy = 'PID'):
         cursor = self.connection.cursor()
         query = ("select * from purchases natural join users natural join resources "
         "where user_id = %s and resource_id = %s ")

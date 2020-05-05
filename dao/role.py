@@ -29,7 +29,7 @@ class RoleDao:
     def getRoleById(self, roleID):
         cursor = self.connection.cursor()
         query = ("select * from roles where role_id = %s ")
-        cursor.execute(query, roleID)
+        cursor.execute(query, (roleID,))
         result = cursor.fetchone()
         cursor.close()
         return result
@@ -37,7 +37,7 @@ class RoleDao:
     def getRoleByName(self, roleName):
         cursor = self.connection.cursor()
         query = ("select * from roles where role_name = %s ")
-        cursor.execute(query, roleName)
+        cursor.execute(query, (roleName,))
         result = cursor.fetchone()
         cursor.close()
         return result
@@ -46,7 +46,7 @@ class RoleDao:
         cursor = self.connection.cursor()
         query = ("select * from users natural join roles "
         "where user_id = %s ")
-        cursor.execute(query, userID)
+        cursor.execute(query, (userID,))
         result = cursor.fetchone()
         cursor.close()
         return result
