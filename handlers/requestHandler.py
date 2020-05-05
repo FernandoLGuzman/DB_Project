@@ -50,7 +50,7 @@ class RequestHandler:
         elif not userId and not resourceId and not resourceName and not date and not isSatisfied:
             requestList = RequestDao().getAllRequests(limit, offset, orderBy)
         else:
-            return jsonify(Error = "Malformed get request"), 400
+            return jsonify(Error = "Malformed Get Request"), 400
         
         result = []
         for row in requestList:
