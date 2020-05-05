@@ -7,7 +7,8 @@ roles = Blueprint('roles', __name__)
 def role():
     if request.method == 'GET':
         #GET handle rcode
-        return RolesHandler().getAllRoles()
+        print(request.args)
+        return RolesHandler().getRoles(request.args)
     elif request.method == 'POST':
         #POST handler code
         print("REQUEST: ", request.json)
