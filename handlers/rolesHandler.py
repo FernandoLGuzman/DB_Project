@@ -1,37 +1,50 @@
 from flask import jsonify
+from dao.role import RoleDao
+
 class RolesHandler:
     def __build_role_dict(self, row):
         result = {}
         result['role_id'] = row[0]
-        result['name'] = row[1]
+        result['role_name'] = row[1]
         return result
 
 
     def __build_role_attributes(self, role_id, name):
         result = {}
         result['role_id'] = role_id
-        result['name'] = name
+        result['role_name'] = name
         return result
 
 
-    def getAllRoles(self):
-        #dao = PartsDAO()
-        roles_list = [[0, 'role'], [1, 'role2']]
-        #roles_list = dao.getAllParts()
-        result_list = []
-        for row in roles_list:
-            result = self.__build_role_dict(row)
-            result_list.append(result)
-        return jsonify(Roles = result_list), 200
+    def getRoles(self, args):
+        userId = args.get('userId', None)
+        roleName = args.get('roleName', None)
+        limit = args.get('limit', 25)
+        offset = args.get('offset', 0)
+        orderBy = args.get('orderBy', 'rid')
 
+        roleList = []
+        if roleName and not userId:
+            roleList = RoleDao.getRoleByName(roleName)
+        elif not roleName and userId:
+            roleList = RoleDao.getRoleByUser(userId)
+        elif not roleName and not userId:
+            roleList = RoleDao.getAllRoles(limit, offset, orderBy)
+        else:
+            return jsonify(Error = "Malformed get request"), 400
+
+        result = []
+        for row in roleList:
+            result.append(self.__build_role_dict(row))
+
+        return jsonify(Roles = result), 200
 
     def getRoleById(self, rid):
-        roles_list = [[rid, 'role']]
-        result_list = []
-        for row in roles_list:
-            result = self.__build_role_dict(row)
-            result_list.append(result)
-        return jsonify(Role = result_list), 200
+        role = RoleDao.getRoleById(rid)
+        if not role:
+            return jsonify(Error = "Role Not Found"), 404
+        result = self.__build_role_dict(role)
+        return jsonify(Role = result), 200
 
 
     def insertRole(self, form):
