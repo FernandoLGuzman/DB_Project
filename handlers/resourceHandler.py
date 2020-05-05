@@ -1,6 +1,5 @@
 from flask import jsonify
 import datetime
-import dao.resource
 from dao.resource import ResourceDao
 
 class ResourceHandler:
@@ -56,35 +55,44 @@ class ResourceHandler:
         userId = args.get('userId', None)
         senateRegion = args.get('senateRegion', None)
         categoryId = args.get('categoryId', None)
-        requestId = args.get('requestId', None)
+        requested = args.get('requested', None)
+        keywords = args.get('keywords', None)
         minStock = args.get('minStock', 0)
         minPrice = args.get('minPrice', 0)
         maxPrice = args.get('maxPrice', 9999999999999.99)
         limit = args.get('limit', 25)
-        offset = args.get('offser', 0)
+        offset = args.get('offset', 0)
         orderBy = args.get('orderBy', 'name')
 
         resourceList = []
 
-        if userId and categoryId and not requestId and not senateRegion:
+        if userId and categoryId and not requested and not senateRegion and not keywords:
             resourceList = ResourceDao().getResourcesByCategoryAndSupplier(categoryId, userId, minStock, minPrice, maxPrice, limit, offset, orderBy)
 
-        elif categoryId and senateRegion and not userId and not requestId:
+        elif categoryId and senateRegion and not userId and not requested and not keywords:
             resourceList = ResourceDao().getResourcesByCategoryAndSenateRegion(categoryId, senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
         
-        elif requestId and not categoryId and not userId and not senateRegion:
-            resourceList = ResourceDao().getAllRequestedResources(requestId, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        elif requested and not categoryId and not userId and not senateRegion and not keywords:
+            if requested == 'true':
+                resourceList = ResourceDao().getAllRequestedResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+            elif requested == 'false':
+                resourceList = ResourceDao().getAllUnrequestedResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+            else:
+                return jsonify(Error = "Malformed get request"), 400
         
-        elif categoryId and not userId and not requestId and not senateRegion:
+        elif categoryId and not userId and not requested and not senateRegion and not keywords:
             resourceList = ResourceDao().getResourcesByCategory(categoryId, minStock, minPrice, maxPrice, limit, offset, orderBy)
         
-        elif senateRegion and not categoryId and not requestId and not userId:
+        elif senateRegion and not categoryId and not requested and not userId and not keywords:
             resourceList = ResourceDao().getResourcesBySenateRegion(senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
         
-        elif userId and not categoryId and not requestId and not senateRegion:
+        elif userId and not categoryId and not requested and not senateRegion and not keywords:
             resourceList = ResourceDao().getResourcesBySupplier(userId, minStock, minPrice, maxPrice, limit, offset, orderBy)
         
-        elif not userId and not categoryId and not senateRegion and not requestId:
+        elif keywords and not userId and not categoryId and not requested and not senateRegion:
+            resourceList = ResourceDao().getResourcesByKeywords(keywords, minStock, minPrice, maxPrice, limit, offset, orderBy)
+
+        elif not userId and not categoryId and not senateRegion and not requested and not keywords:
             resourceList = ResourceDao().getAllResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
         
         else:
