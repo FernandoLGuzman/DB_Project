@@ -4,18 +4,18 @@ from dao.purchase import PurchaseDao
 class PurchaseHandler:
     def buildPurchase(self, row):
         purchase = {
-        'purchase_id': row[0],
-        'user_id': row[1],
-        'resource_id': row[2],
+        'purchase_id': row[2],
+        'user_id': row[0],
+        'resource_id': row[1],
         'quantity': row[3],
-        'price': float(row[12]),
+        'purchase_price': float(row[4]),
         'date': row[5],
-        'address_id': row[8],
-        'category_id': row[9],
-        'resource_name': row[10],
-        'description': row[11],
-        'price': float(row[12]),
-        'stock': row[13]
+        'address_id': row[6],
+        'category_id': row[7],
+        'resource_name': row[8],
+        'description': row[9],
+        'price': float(row[10]),
+        'stock': row[11]
         }
         return purchase
 

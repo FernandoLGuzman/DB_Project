@@ -77,13 +77,13 @@ class RequestDao:
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
         cursor.execute(query, (uid, limit, offset))
-        result = cursor.fetchall
+        result = cursor.fetchall()
         cursor.close()
         return result
 
     def getRequestsByResourceID(self, rid, limit = 25, offset = 0, orderBy = "ReqID"):
         cursor = self.connection.cursor()
-        query = ("select * form requests natural join resources "
+        query = ("select * from requests natural join resources "
         "where resource_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "

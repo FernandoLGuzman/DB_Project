@@ -24,7 +24,7 @@ class PurchaseDao:
 
     def getAllPurchases(self, limit = 25, offset = 0, orderBy = 'PID'):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id ")
+        query = ("select * from purchases natural join resources ")
         query += self.orderBy(orderBy)
         query += ("limit %s offset %s ")
         cursor.execute(query, (limit, offset))
@@ -34,7 +34,7 @@ class PurchaseDao:
 
     def getPurchaseByID(self, pid):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
+        query = ("select * from purchases natural join resources "
         "where purchase_id = %s ")
         cursor.execute(query, (pid,))
         result = cursor.fetchone()
@@ -43,7 +43,7 @@ class PurchaseDao:
 
     def getPurchasesByDate(self, date, limit = 25, offset = 0, orderBy = "PID"):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
+        query = ("select * from purchases natural join resources "
         "where date = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -52,11 +52,10 @@ class PurchaseDao:
         cursor.close()
         return result
 
-    # TODO fix either this or price name
     def getPurchasesByPrice(self, price, limit = 25, offset = 0, orderBy = "priceDESC"):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
-        "where purchases.price = %s ")
+        query = ("select * from purchases natural join resources "
+        "where purchase_price = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
         cursor.execute(query, (price, limit, offset))
@@ -66,18 +65,18 @@ class PurchaseDao:
 
     def getPurchasesByUserID(self, uid, limit = 25, offset = 0, orderBy = "PID"):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
+        query = ("select * from purchases natural join resources "
         "where purchases.user_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
         cursor.execute(query, (uid, limit, offset))
-        result = cursor.fetchall
+        result = cursor.fetchall()
         cursor.close()
         return result
 
     def getPurchasesByResourceID(self, rid, limit = 25, offset = 0, orderBy = "PID"):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
+        query = ("select * from purchases natural join resources "
         "where purchases.resource_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -88,7 +87,7 @@ class PurchaseDao:
 
     def getPurchasesByUserIDAndResourceID(self, uid, resid, limit = 25, offset = 0, orderBy = 'PID'):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
+        query = ("select * from purchases natural join resources "
         "where purchases.user_id = %s and purchases.resource_id = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s "
@@ -99,7 +98,7 @@ class PurchaseDao:
 
     def getPurchasesByResourceName(self, rname, limit = 25, offset = 0, orderBy = "ResName"):
         cursor = self.connection.cursor()
-        query = ("select * from purchases join resources on purchases.resource_id "
+        query = ("select * from purchases natural join resources "
         "where resource_name = %s ")
         query += self.orderBy(orderBy)
         query += "limit %s offset %s " 
