@@ -157,5 +157,3 @@ class ResourceDao:
         result = cursor.fetchall()
         cursor.close()
         return result
-
-print(ResourceDao().getResourcesByCategoryAndSenateRegion(regionId=1, categoryId=1))
