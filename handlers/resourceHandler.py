@@ -32,15 +32,6 @@ class ResourceHandler:
                 }
             }
         }
-        #TODO add supplier name and category name for ui to  use 
-        # resource['resource_id'] = row[0]
-        # resource['supplier_id'] = row[1]
-        # resource['address_id'] = row[2]
-        # resource['category_id'] = row[3]
-        # resource['name'] = row[4]
-        # resource['description'] = row[5]
-        # resource['price'] = row[6]
-        # resource['stock'] = row[7]
         return resource
 
     def buildResourceRequest(self, row):
@@ -65,6 +56,7 @@ class ResourceHandler:
         userId = args.get('userId', None)
         senateRegion = args.get('senateRegion', None)
         categoryId = args.get('categoryId', None)
+        requestId = args.get('requestId', None)
         minStock = args.get('minStock', 0)
         minPrice = args.get('minPrice', 0)
         maxPrice = args.get('maxPrice', 9999999999999.99)
@@ -74,25 +66,34 @@ class ResourceHandler:
 
         resourceList = []
 
-        if userId and categoryId:
+        if userId and categoryId and not requestId and not senateRegion:
             resourceList = ResourceDao().getResourcesByCategoryAndSupplier(categoryId, userId, minStock, minPrice, maxPrice, limit, offset, orderBy)
-        elif categoryId and senateRegion:
+
+        elif categoryId and senateRegion and not userId and not requestId:
             resourceList = ResourceDao().getResourcesByCategoryAndSenateRegion(categoryId, senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
-        elif categoryId:
+        
+        elif requestId and not categoryId and not userId and not senateRegion:
+            resourceList = ResourceDao().getAllRequestedResources(requestId, minStock, minPrice, maxPrice, limit, offset, orderBy)
+        
+        elif categoryId and not userId and not requestId and not senateRegion:
             resourceList = ResourceDao().getResourcesByCategory(categoryId, minStock, minPrice, maxPrice, limit, offset, orderBy)
-        elif senateRegion:
+        
+        elif senateRegion and not categoryId and not requestId and not userId:
             resourceList = ResourceDao().getResourcesBySenateRegion(senateRegion, minStock, minPrice, maxPrice, limit, offset, orderBy)
-        elif userId:
+        
+        elif userId and not categoryId and not requestId and not senateRegion:
             resourceList = ResourceDao().getResourcesBySupplier(userId, minStock, minPrice, maxPrice, limit, offset, orderBy)
-        else:
+        
+        elif not userId and not categoryId and not senateRegion and not requestId:
             resourceList = ResourceDao().getAllResources(minStock, minPrice, maxPrice, limit, offset, orderBy)
+        
+        else:
+            return jsonify(Error = "Malformed get request"), 400
 
         result = []
         for row in resourceList:
             result.append(self.buildResource(row))
 
-        #dao logic including filtering ordering and limiting
-        # result = [self.buildResource([2312, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])]
         return jsonify(Resources = result), 200
 
     def getResourceById(self, id):
@@ -102,7 +103,7 @@ class ResourceHandler:
             return jsonify(Error = "Resource Not Found"), 404
             
         result = self.buildResource(resource)
-        # result = self.buildResource([id, 3452, 235, 5, 'Nike Shoe', 'Its a shoe, what did you expect?', 100, 20])
+
         return jsonify(Resource = result), 200
 
     def getResourceRequests(self, args):
