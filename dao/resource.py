@@ -15,12 +15,12 @@ class ResourceDao:
 
         if attribute == 'name':
             return "order by resource_name "
-        elif attribute == 'description':
-            return "order by description "
-        elif attribute == 'price':
-            return "order by price "
+        elif attribute == 'priceDESC':
+            return "order by price desc "
+        elif attribute == 'priceASC':
+            return "order by price asc "
         elif attribute == 'stock':
-            return "order by stock "
+            return "order by stock desc "
         else:
             return ""
 
@@ -32,6 +32,19 @@ class ResourceDao:
         query += ("limit %s offset %s ")
 
         cursor.execute(query, (minStock, minPrice, maxPrice, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+    
+    def getAllRequestedResources(self, requestId, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
+        cursor = self.connection.cursor()
+        query = ("select * from resources natural join categories natural join addresses natural join senate_region "
+                "inner join requests on resources.resource_id=requests.resource_id "
+                "where request_id = %s and stock >= %s and price between %s and %s ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
+
+        cursor.execute(query, (requestId, minStock, minPrice, maxPrice, limit, offset))
         result = cursor.fetchall()
         cursor.close()
         return result
