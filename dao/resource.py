@@ -143,5 +143,17 @@ class ResourceDao:
         result = cursor.fetchall()
         cursor.close()
         return result
+    
+    def getResourcesByKeywords(self, keywords, minStock = 0, minPrice = 0, maxPrice = 9999999999999.99, limit = 25, offset = 0, orderBy = 'name'):
+        cursor = self.connection.cursor()
+        query = ("select * "
+                "from resources natural join categories natural join addresses natural join senate_region "
+                "where stock >= %s and price between %s and %s "
+                "and match(resource_name, description) against (%s) ")
+        query += self.orderBy(orderBy)
+        query += ("limit %s offset %s ")
 
-print(ResourceDao().getResourcesByCategoryAndSenateRegion(regionId=1, categoryId=1))
+        cursor.execute(query, (minStock, minPrice, maxPrice, keywords, limit, offset))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
