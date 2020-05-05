@@ -1,10 +1,12 @@
 from flask import jsonify
+from dao.category import CategoryDao
+
 class CategoryHandler:
     def __build_category_dict(self, row):
         result = {}
         result['category_id'] = row[0]
-        result['parent_category'] = row[1]
-        result['name'] = row[2]
+        result['parent_category'] = row[2]
+        result['category_name'] = row[1]
         return result
 
 
@@ -17,9 +19,8 @@ class CategoryHandler:
 
 
     def getAllCategories(self):
-        #dao = PartsDAO()
-        categories_list = [[0, None, 'category'], [1, 0, 'category2']]
-        #categories_list = dao.getAllParts()
+        dao = CategoryDao()
+        categories_list = dao.getAllCategories()
         result_list = []
         for row in categories_list:
             result = self.__build_category_dict(row)
@@ -28,12 +29,13 @@ class CategoryHandler:
 
 
     def getCategoryById(self, cid):
-        categories_list = [[cid, 'null', 'category']]
-        result_list = []
-        for row in categories_list:
+        dao = CategoryDao()
+        row = dao.getCategoryByID(cid)
+        if not row:
+            return jsonify(Error = "Category Not Found"), 404
+        else:
             result = self.__build_category_dict(row)
-            result_list.append(result)
-        return jsonify(Category = result_list), 200
+            return jsonify(Category = result), 200
 
 
     def insertCategory(self, form):

@@ -73,7 +73,7 @@ class UserHandler:
     def getUserByID(self, uid):
         dao = UserDao()
         row = dao.getUserById(uid)
-        if not row: # hardcoded, delete later
+        if not row:
             return jsonify(Error = "User Not Found"), 404
         else:
             user = self.__build_user_dict(row)

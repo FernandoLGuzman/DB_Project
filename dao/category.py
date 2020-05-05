@@ -19,7 +19,7 @@ class CategoryDao:
         else:
             return ""
 
-    def getAllCategories(self, limit = 25, offset = 0, orderBy = cid):
+    def getAllCategories(self, limit = 25, offset = 0, orderBy = 'cid'):
         cursor = self.connection.cursor()
         query = ("select * from categories ")
         query += self.orderBy(orderBy)
@@ -32,7 +32,7 @@ class CategoryDao:
     def getCategoryByID(self, categoryID):
         cursor = self.connection.cursor()
         query = ("select * from categories where category_id = %s ")
-        cursor.execute(query, categoryID)
+        cursor.execute(query, (categoryID,))
         result = cursor.fetchone()
         cursor.close()
         return result
@@ -40,7 +40,7 @@ class CategoryDao:
     def getCategoryByName(self, categoryName):
         cursor = self.connection.cursor()
         query = ("select * from categories where category_name = %s ")
-        cursor.execute(query, categoryName)
+        cursor.execute(query, (categoryName,))
         result = cursor.fetchone()
         cursor.close()
         return result
@@ -60,7 +60,7 @@ class CategoryDao:
         cursor = self.connection.cursor()
         query = ("select * from categories where category_id in "
         "(select parent_category from categories where category_id = %s) ")
-        cursor.execute(query, categoryID)
+        cursor.execute(query, (categoryID,))
         result = cursor.fetchone()
         cursor.close()
         return result
@@ -69,7 +69,7 @@ class CategoryDao:
         cursor = self.connection.cursor()
         query = ("select * from resources natural join categories "
         "where resource_id = %s ")
-        cursor.execute(query, resourceID)
+        cursor.execute(query, (resourceID,))
         result = cursor.fetchone()
         cursor.close()
         return result
