@@ -220,3 +220,15 @@ class ResourceDao:
         self.connection.commit()
         cursor.close()
         return resourceId
+
+    def restockResouce(self, resourceId, quantity):
+        cursor = self.connection.cursor()
+        query = ("insert into restocks(resource_id, quantity, date) "
+                "values (%s, %s, %s) ")
+        
+        cursor.execute(query, (resourceId, quantity, datetime.now().date()))
+        restockId = cursor.lastrowid
+
+        self.connection.commit()
+        cursor.close()
+        return restockId
