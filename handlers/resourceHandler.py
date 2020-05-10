@@ -227,8 +227,17 @@ class ResourceHandler:
     #         return jsonify(Error = 'Unexpected attributes in post request'), 400
 
     def restockResource(self, resourceId, args):
-        #dao logic
-        return jsonify(Restock = "Success"), 200
+        if args == None or len(args) != 1:
+            return jsonify(Error = 'Malformed post request'), 400
+        try:
+            quantity = args['quantity']
+            if quantity:
+                restockId = ResourceDao().restockResouce(resourceId, quantity)
+                return jsonify(Restock = {'restockId': restockId}), 201
+            else:
+                return jsonify(Error = 'Attributes must not be null'), 400
+        except:
+            return jsonify(Error = 'Unexpected attributes in post request'), 400
 
     def deleteResource(self, id):
         #dao logic
