@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+from datetime import datetime
 from config.localConfig import mysql as config
 
 # connection = mysql.connector.connect(**config)
@@ -203,3 +204,19 @@ class ResourceDao:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def insertResource(self, userid, addressId, categoryId, resourceName, description, price, stock):
+        cursor = self.connection.cursor()
+
+        insertResourceQuery = ("insert into resources(user_id, address_id, category_id, resource_name, description, price, stock) "
+                "values (%s, %s, %s, %s, %s, %s, %s) ")
+        cursor.execute(insertResourceQuery, (userid, addressId, categoryId, resourceName, description, price, stock))
+        resourceId = cursor.lastrowid
+
+        insertRestockQuery = ("insert into restocks(resource_id, quantity, date) "
+                            "values (%s, %s, %s) ")
+        cursor.execute(insertRestockQuery, (resourceId, stock, datetime.now().date()))
+        
+        self.connection.commit()
+        cursor.close()
+        return resourceId

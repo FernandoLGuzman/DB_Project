@@ -33,24 +33,6 @@ class ResourceHandler:
         }
         return resource
 
-    def buildResourceRequest(self, row):
-        request = {}
-        request['request_id'] = row[0]
-        request['user_id'] = row[1]
-        request['resource_id'] = row[2]
-        request['quantity'] = row[3]
-        request['date'] = row[4]
-        return request
-
-    def buildResourcePurchase(self, row):
-        purchase = {}
-        purchase['purchase_id'] = row[0]
-        purchase['user_id'] = row[1]
-        purchase['resource_id'] = row[2]
-        purchase['quantity'] = row[3]
-        purchase['date'] = row[4]
-        return purchase
-
     def getResources(self, args):
         userId = args.get('userId', None)
         senateRegion = args.get('senateRegion', None)
@@ -145,59 +127,61 @@ class ResourceHandler:
         return jsonify(ResourcePurchase = result), 200
 
     def insertResource(self, args):
-        if len(args) != 7:
+        if args == None or len(args) != 7:
             return jsonify(Error = 'Malformed post request'), 400
         try:
-            sid = args['supplier_id']
+            uid = args['user_id']
             aid = args['address_id']
             cid = args['category_id']
-            name = args['name']
+            name = args['resource_name']
             description = args['description']
             price = args['price']
             stock = args['stock']
-            if sid and aid and cid and name and description and price and stock:
+            if uid and aid and cid and name and description and price and stock:
                 #dao logic
-                result = self.buildResource([0, sid, aid, cid, name, description, 100, 20])
+                resourceId = ResourceDao().insertResource(uid, aid, cid, name, description, price, stock)
+                resource = ResourceDao().getResourceById(resourceId)
+                result = self.buildResource(resource)
                 return jsonify(Resource = result), 201
             else:
                 return jsonify(Error = 'Attributes must not be null'), 400
         except:
             return jsonify(Error = 'Unexpected attributes in post request'), 400
 
-    def insertResourceRequest(self, args):
-        if len(args) != 4:
-            return jsonify(Error = 'Malformed post request'), 400
+    # def insertResourceRequest(self, args):
+    #     if len(args) != 4:
+    #         return jsonify(Error = 'Malformed post request'), 400
 
-        try:
-            uid = args['user_id']
-            rid = args['resource_id']
-            quantity = args['quantity']
-            date = args['date']
-            if uid and rid and quantity and date:
-                #dao logic
-                result = self.buildResourceRequest([0, uid, rid, quantity, date])
-                return jsonify(ResourceRequest = result), 201
-            else:
-                return jsonify(Error = 'Attributes must not be null'), 400
-        except:
-            return jsonify(Error = 'Unexpected attributes in post request'), 400
+    #     try:
+    #         uid = args['user_id']
+    #         rid = args['resource_id']
+    #         quantity = args['quantity']
+    #         date = args['date']
+    #         if uid and rid and quantity and date:
+    #             #dao logic
+    #             result = self.buildResourceRequest([0, uid, rid, quantity, date])
+    #             return jsonify(ResourceRequest = result), 201
+    #         else:
+    #             return jsonify(Error = 'Attributes must not be null'), 400
+    #     except:
+    #         return jsonify(Error = 'Unexpected attributes in post request'), 400
 
-    def insertResourcePurchase(self, args):
-        if len(args) != 4:
-            return jsonify(Error = 'Malformed post request'), 400
-        try:
-            uid = args['user_id']
-            rid = args['resource_id']
-            quantity = args['quantity']
-            date = args['date']
-            if uid and rid and quantity and date:
-                #dao logic
-                result = self.buildResourceRequest([0, uid, rid, quantity, date])
-                return jsonify(ResourceRequest = result), 201
-            else:
-                return jsonify(Error = 'Attributes must not be null'), 400
-        except:
-            return jsonify(Error = 'Unexpected attributes in post request'), 400
+    # def insertResourcePurchase(self, args):
+    #     if len(args) != 4:
+    #         return jsonify(Error = 'Malformed post request'), 400
+    #     try:
+    #         uid = args['user_id']
+    #         rid = args['resource_id']
+    #         quantity = args['quantity']
+    #         date = args['date']
+    #         if uid and rid and quantity and date:
+    #             #dao logic
+    #             result = self.buildResourceRequest([0, uid, rid, quantity, date])
+    #             return jsonify(ResourceRequest = result), 201
+    #         else:
+    #             return jsonify(Error = 'Attributes must not be null'), 400
+    #     except:
+    #         return jsonify(Error = 'Unexpected attributes in post request'), 400
 
     def updateResource(self, id, args):
         # if id not in db:
@@ -222,25 +206,25 @@ class ResourceHandler:
         except:
             return jsonify(Error = 'Unexpected attributes in post request'), 400
 
-    def updateResourceRequest(self, id, args):
-        # if not in db:
-        #     return jsonify(Error = 'Resource request not found'), 404
-        if len(args) != 4:
-            return jsonify(Error = 'Malformed post request'), 400
+    # def updateResourceRequest(self, id, args):
+    #     # if not in db:
+    #     #     return jsonify(Error = 'Resource request not found'), 404
+    #     if len(args) != 4:
+    #         return jsonify(Error = 'Malformed post request'), 400
 
-        try:
-            uid = args['user_id']
-            rid = args['resource_id']
-            quantity = args['quantity']
-            date = args['date']
-            if uid and rid and quantity and date:
-                #dao logic
-                result = self.buildResourceRequest([id, uid, rid, quantity, date])
-                return jsonify(ResourceRequest = result), 201
-            else:
-                return jsonify(Error = 'Attributes must not be null'), 400
-        except:
-            return jsonify(Error = 'Unexpected attributes in post request'), 400
+    #     try:
+    #         uid = args['user_id']
+    #         rid = args['resource_id']
+    #         quantity = args['quantity']
+    #         date = args['date']
+    #         if uid and rid and quantity and date:
+    #             #dao logic
+    #             result = self.buildResourceRequest([id, uid, rid, quantity, date])
+    #             return jsonify(ResourceRequest = result), 201
+    #         else:
+    #             return jsonify(Error = 'Attributes must not be null'), 400
+    #     except:
+    #         return jsonify(Error = 'Unexpected attributes in post request'), 400
 
     def restockResource(self, resourceId, args):
         #dao logic
