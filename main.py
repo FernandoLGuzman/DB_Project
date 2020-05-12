@@ -5,6 +5,7 @@ from routes.categories import categories
 from routes.roles import roles
 from routes.requests import requests
 from routes.purchases import purchases
+from routes.senate_regions import regions
 
 from flask_cors import CORS, cross_origin
 
@@ -18,6 +19,7 @@ app.register_blueprint(categories, url_prefix='/category')
 app.register_blueprint(roles, url_prefix='/role')
 app.register_blueprint(requests, url_prefix='/request')
 app.register_blueprint(purchases, url_prefix='/purchase')
+app.register_blueprint(regions, url_prefix='/regions')
 
 @app.route('/')
 def hello_world():
