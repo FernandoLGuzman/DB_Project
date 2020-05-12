@@ -119,3 +119,13 @@ class UserDao:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def insert(self, first_name, last_name, email, password, role_id, address_id, phone_number):
+        cursor = self.connection.cursor()
+        inserQuery = ("insert into users(first_name, last_name, email, password, role_id, address_id, phone_number) "
+        "values (%s, %s, %s, %s, %s, %s, %s) ")
+        cursor.execute(inserQuery, (first_name, last_name, email, password, role_id, address_id, phone_number))
+        userId = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return userId

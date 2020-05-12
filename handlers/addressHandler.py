@@ -1,4 +1,5 @@
 from flask import jsonify
+from dao.address import AddressDao
 
 class AddressHandler:
     def __build_address_dict(self, row):
@@ -63,9 +64,8 @@ class AddressHandler:
                 latitud = form['latitud']
                 longitud = form['longitud']
                 if street_address and city and country and zip_code and senate_region and latitud and longitud:
-                    #dao = PartsDAO()
-                    aid = 2
-                    #aid = dao.insert(parent_Address, name)
+                    dao = AddressDao()
+                    aid = dao.insert(street_address,city,country,zip_code, senate_region,latitud,longitud)
                     result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
                     return jsonify(Address=result), 201
                 else:

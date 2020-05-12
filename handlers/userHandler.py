@@ -1,7 +1,6 @@
 from flask import jsonify
 from dao.user import UserDao
 from dao.payment import PaymentDao
-# from dao.users import UsersDAO
 
 class UserHandler:
     def __build_user_dict(self, row):
@@ -161,7 +160,7 @@ class UserHandler:
         if not form:
             return jsonify(Error = 'Empty Form'), 400
         print("form: ", form)
-        if len(form) != 6:
+        if len(form) != 7:
             return jsonify(Error = "Malformed post request"), 400
         else:
             try:
@@ -171,10 +170,10 @@ class UserHandler:
                 email = form['email']
                 password = form['password']
                 phone_number = form['phone_number']
-                if fname and lname and email and password and phone_number and rid:
-                    # dao = UsersDAO()
-                    uid = 0 # temp
-                    # uid = dao.insert(fname, lname, email, password, phone_number)
+                address_id = form['address_id']
+                if fname and lname and email and password and phone_number and rid and address_id:
+                    dao = UserDao()
+                    uid = dao.insert(fname,lname,email,password,rid,address_id,phone_number)
                     result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
                     return jsonify(User = result), 201
                 else:
