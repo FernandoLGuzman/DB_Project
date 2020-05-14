@@ -60,9 +60,20 @@ class PurchaseHandler:
         result = self.buildPurchase(purchase)
         return result
     
-    def insertPurchase(self, args):
+    def insertPurchase(self, json):
         # TODO later
-        return
+        userId = json['user_id']
+        resourceId = json['resource_id']
+        quantity = json['quantity']
+        price = json['purchase_price']
+        if userId and resourceId and quantity:
+            pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
+            purchase = self.getPurchaseById(pid)
+            result = self.buildPurchase(purchase) # returns error despite being pushed to DB
+            return jsonify(PurchaseDao=result), 201
+        else:
+            return jsonify(Error="Unexpected attributes in post request"), 400
+
 
     def updatePurchase(self, pid, args):
         # TODO later
