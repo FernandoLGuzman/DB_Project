@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 from config.localConfig import mysql as config
+from datetime import datetime
 
 # handled in resourceHandler, may need to add stuff there
 class PurchaseDao:
@@ -106,3 +107,13 @@ class PurchaseDao:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def insertPurchase(self, uid, rid, qty, price):
+        cursor = self.connection.cursor()
+        insertQuery = ("insert into purchases(user_id, resource_id, quantity, purchase_price, date) "
+            "values(%s, %s, %s, %s, %s) ")
+        cursor.execute(insertQuery, (uid, rid, qty, price, datetime.now().date()))
+        purchaseID = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return purchaseID

@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 from config.localConfig import mysql as config
+from datetime import datetime
 
 # handled in resourceHandler, may need to add stuff there
 class RequestDao:
@@ -113,3 +114,13 @@ class RequestDao:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def insertRequest(self, uid, rid, qty):
+        cursor = self.connection.cursor()
+        insertQuery = ("insert into requests(user_id, resource_id, quantity, date, is_satisfied) "
+            "values(%s, %s, %s, %s, %s) ")
+        cursor.execute(insertQuery, (uid, rid, qty, datetime.now().date(), 0))
+        requestID = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return requestID

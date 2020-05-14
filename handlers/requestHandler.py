@@ -65,9 +65,17 @@ class RequestHandler:
         result = self.buildRequest(request)
         return result
     
-    def insertRequest(self, args):
-        # TODO later
-        return
+    def insertRequest(self, json):
+        userId = json['user_id']
+        resourceId = json['resource_id']
+        quantity = json['quantity']
+        if userId and resourceId and quantity:
+            rid = RequestDao().insertRequest(userId, resourceId, quantity)
+            request = self.getRequestById(rid)
+            result = self.buildRequest(request) # returns error despite being pushed to DB
+            return jsonify(Request=result), 201
+        else:
+            return jsonify(Error="Unexpected attributes in post request"), 400
 
     def updateRequest(self, reqid, args):
         # TODO later
