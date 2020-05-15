@@ -71,11 +71,13 @@ class PurchaseHandler:
         if userId and resourceId and quantity and payMethodId:
             paymentMethod = PaymentDao().getPaymentMethodById(payMethodId)
             if paymentMethod:
-                if paymentMethod['wallet'] < price:
+                wallet = paymentMethod[3]
+                if wallet < price:
                     return jsonify(Error="Not Enough Money to Pay"), 400 # incorrect error code?
                 else:
-                    # updatePayment
-                    print("Charging Payment Method") # placeholder
+                    walletAfter = wallet - price
+                    # updatePaymentWallet(payMethodId, walletAfter)
+                    print("\nCharging Payment Method\n") # placeholder
             else:
                 return jsonify(Error="Payment Method Not Found"), 404
             pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
