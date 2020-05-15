@@ -49,9 +49,8 @@ class CategoryHandler:
                 parent_category = form['parent_category']
                 name = form['name']
                 if name:
-                    #dao = PartsDAO()
-                    cid = 0
-                    #cid = dao.insert(parent_category, name)
+                    dao = CategoryDao()
+                    cid = dao.insert(name,parent_category)
                     result = self.__build_category_attributes(cid, parent_category, name)
                     return jsonify(Category=result), 201
                 else:

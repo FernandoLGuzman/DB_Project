@@ -57,9 +57,8 @@ class RolesHandler:
             try:
                 name = form['name']
                 if name:
-                    #dao = PartsDAO()
-                    rid = 0
-                    #rid = dao.insert(name)
+                    dao = RoleDao()
+                    rid = dao.insert(name)
                     result = self.__build_role_attributes(rid, name)
                     return jsonify(Role=result), 201
                 else:

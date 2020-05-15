@@ -80,7 +80,7 @@ class CategoryDao:
         inserQuery = ("insert into categories(category_name, parent_category) "
         "values (%s, %s) ")
         cursor.execute(inserQuery, (name, parent))
-        userId = cursor.lastrowid
+        cid = cursor.lastrowid
         self.connection.commit()
         cursor.close()
-        return userId
+        return cid

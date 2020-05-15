@@ -54,9 +54,8 @@ class RegionsHandler:
             try:
                 name = form['name']
                 if name:
-                    #dao = PartsDAO()
-                    rid = 0
-                    #rid = dao.insert(name)
+                    dao = RegionsDao()
+                    rid = dao.insert(name)
                     result = self.__build_region_attributes(rid, name)
                     return jsonify(Region=result), 201
                 else:
