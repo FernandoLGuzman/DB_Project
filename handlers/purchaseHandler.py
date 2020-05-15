@@ -84,6 +84,7 @@ class PurchaseHandler:
                     else:
                         walletAfter = wallet - price
                         PaymentDao().updatePaymentWallet(payMethodId, walletAfter)
+                        ResourceDao().decreaseStock(resourceId, quantity)
                         # print("\nCharging Payment Method\n") # placeholder
                         pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
                         # change resource stock here

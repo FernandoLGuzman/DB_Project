@@ -30,39 +30,6 @@ def resourceById(id):
 def resourceRestock(resourceId):
     return ResourceHandler().restockResource(resourceId, request.json)
 
-@resources.route('/request', methods = ['GET', 'POST'])
-def resourceRequest():
-    if request.method == 'GET':
-        #GET handler code
-        return ResourceHandler().getResourceRequests(request.args)
-    elif request.method == 'POST':
-        #POST handler code
-        return ResourceHandler().insertResourceRequest(request.json)
-
-@resources.route('/request/<int:id>', methods = ['GET', 'PUT'])
-def resourceRequestById(id):
-    if request.method == 'GET':
-        #GET handler code
-        return ResourceHandler().getResourceRequestById(id)
-    elif request.method == 'PUT':
-        #PUT handler code
-        return ResourceHandler().updateResourceRequest(id, request.json)
-
-@resources.route('/purchase', methods = ['GET', 'POST'])
-def resourcePurchase():
-    if request.method == 'GET':
-        #GET handler code
-        return ResourceHandler().getResourcePurchases(request.args)
-    elif request.method == 'POST':
-        #POST handler code
-        return ResourceHandler().insertResourcePurchase(request.json)
-
-@resources.route('/purchase/<int:id>', methods = ['GET'])
-def resourcePurchaseById(id):
-    if request.method == 'GET':
-        #GET handler code
-        return ResourceHandler().getResourcePurchaseById(id)
-
 @resources.route('/statistics', methods = ['GET'])
 def resourceStatistics():
     #Get handler code

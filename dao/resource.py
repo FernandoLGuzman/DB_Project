@@ -215,7 +215,7 @@ class ResourceDao:
 
         insertRestockQuery = ("insert into restocks(resource_id, quantity, date) "
                             "values (%s, %s, %s) ")
-        cursor.execute(insertRestockQuery, (resourceId, stock, datetime.now().date()))
+        cursor.execute(insertRestockQuery, (resourceId, stock, datetime.now()))
         
         self.connection.commit()
         cursor.close()
@@ -226,9 +226,70 @@ class ResourceDao:
         query = ("insert into restocks(resource_id, quantity, date) "
                 "values (%s, %s, %s) ")
         
-        cursor.execute(query, (resourceId, quantity, datetime.now().date()))
+        cursor.execute(query, (resourceId, quantity, datetime.now()))
         restockId = cursor.lastrowid
 
         self.connection.commit()
         cursor.close()
         return restockId
+
+    def increaseStock(self, resourceId, stock):
+        cursor = self.connection.cursor()
+        query = ("update resources "
+                "set stock = stock + %s "
+                "where resource_id = %s ")
+
+        cursor.execute(query, (stock, resourceId))
+
+        self.connection.commit()
+        cursor.close()
+
+    def decreaseStock(self, resourceId, stock):
+        cursor = self.connection.cursor()
+        query = ("update resources "
+                "set stock = stock - %s "
+                "where resource_id = %s ")
+
+        cursor.execute(query, (stock, resourceId))
+
+        self.connection.commit()
+        cursor.close()
+
+    def updateName(self, resourceId, name, autoCommit = True):
+        cursor = self.connection.cursor()
+        query = ("update resources "
+                "set resource_name = %s "
+                "where resource_id = %s")
+
+        cursor.execute(query, (name, resourceId))
+        if autoCommit:
+            self.connection.commit()
+        cursor.close()
+
+    def updateDescription(self, resourceId, description, autoCommit = True):
+        cursor = self.connection.cursor()
+        query = ("update resources "
+                "set description = %s "
+                "where resource_id = %s")
+
+        cursor.execute(query, (description, resourceId))
+        if autoCommit:
+            self.connection.commit()
+        cursor.close()
+
+    def updatePrice(self, resourceId, price, autoCommit = True):
+        cursor = self.connection.cursor()
+        query = ("update resources "
+                "set price = %s "
+                "where resource_id = %s")
+
+        cursor.execute(query, (price, resourceId))
+        if autoCommit:
+            self.connection.commit()
+        cursor.close()
+
+    def commit(self):
+        self.connection.commit()
+
+
+    
