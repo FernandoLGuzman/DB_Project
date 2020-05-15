@@ -69,8 +69,7 @@ class PurchaseHandler:
         if userId and resourceId and quantity:
             pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
             purchase = self.getPurchaseById(pid)
-            result = self.buildPurchase(purchase) # returns error despite being pushed to DB
-            return jsonify(PurchaseDao=result), 201
+            return jsonify(Purchase=purchase), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
 

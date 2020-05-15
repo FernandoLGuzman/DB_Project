@@ -72,8 +72,7 @@ class RequestHandler:
         if userId and resourceId and quantity:
             rid = RequestDao().insertRequest(userId, resourceId, quantity)
             request = self.getRequestById(rid)
-            result = self.buildRequest(request) # returns error despite being pushed to DB
-            return jsonify(Request=result), 201
+            return jsonify(Request=request), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
 
