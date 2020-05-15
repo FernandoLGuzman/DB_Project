@@ -103,23 +103,34 @@ Link to diagram: https://drive.google.com/file/d/1-UbNseLd5zJ4iH2_MvqiEngKwrQ9kI
   
   **Relationship Type:** One to Many. Every Address must have a single Senate Region. Many addresses can be located at the same Senate Region.
 
-  * User Payment
+* User Payment
 
   This relationship indicated that a user can have one or many payment methods. This will be used to keep track of the user's wallet amount and keep a record of the types of ways that that user can pay.
 
   **Entity participation:** Payment Methos, User (Total participation on the Payment Method)
   
   **Relationship Type:** Many to one. Every Payment Methid must have a User. A User can have many Payment Methods.  
-* Other
 
-  + User - Role
+* User Role
   
-    **Many to One. (Total participation on User)** User must have exactly one role. Many users have the same role. 
+  This relationship represents that each user must have a role.
+  
+  **Entity participation:** User, Role (Total participation on User)
+  
+  **Relationship Type:** Many to One. User must have exactly one role. Many users have the same role. 
     
-  + Resource - Category
+* Resource Category
+
+  This relationship indicates that every resource belongs to a category.
   
-    **Many to One. (Total participation on Resource)** Many resources can have the same category. A resource can only belong to one category
+  **Entity participation:** Resource, Category (Total participation on Resource)
+
+  **Relationship Type:** Many to One. Many resources can have the same category. A resource can only belong to one category
     
-  + Resource - Restock Entry
-  
-    **One to Many. (Total participation on both)** A resource can be restocked many times, thus having many entries. A restock entry is associated with only resource. The initial stock of a resource is its first restock.
+* Resource Restock
+    
+    This relationship means that every resource may have many restocks. Every time a user adds more stock to a resource, that entry will be added to the restock so that we know when a resource has been restocked.
+    
+    **Entity participation:** Resource, Restock (Total participation on both)
+    
+    **Relationship Type:** One to Many. A resource can be restocked many times, thus having many entries. A restock entry is associated with only resource. The initial stock of a resource is its first restock.
