@@ -73,3 +73,12 @@ class PaymentDao:
         self.connection.commit()
         cursor.close()
         return pId
+
+    def updatePaymentWallet(self, payment_method_id, wallet):
+        cursor = self.connection.cursor()
+        updateQuery = ("update payment_methods set wallet = %s WHERE payment_method_id = %s ")
+        cursor.execute(updateQuery, (wallet, payment_method_id))
+        pId = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return pId 

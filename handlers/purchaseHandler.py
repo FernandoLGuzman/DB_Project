@@ -1,6 +1,7 @@
 from flask import jsonify
 from dao.purchase import PurchaseDao
 from dao.payment import PaymentDao
+from dao.resource import ResourceDao
 
 class PurchaseHandler:
     def buildPurchase(self, row):
@@ -67,22 +68,35 @@ class PurchaseHandler:
         resourceId = json['resource_id']
         payMethodId = json['payment_method_id']
         quantity = json['quantity']
-        price = json['purchase_price']
+        # price = json['purchase_price']
         if userId and resourceId and quantity and payMethodId:
             paymentMethod = PaymentDao().getPaymentMethodById(payMethodId)
-            if paymentMethod:
-                wallet = paymentMethod[3]
-                if wallet < price:
-                    return jsonify(Error="Not Enough Money to Pay"), 400 # incorrect error code?
+            resource = ResourceDao().getResourceById(resourceId)
+            print(quantity)
+            print(resource[8])
+            if paymentMethod and resource:
+                if quantity <= resource[8]:
+                    wallet = paymentMethod[3]
+                    price = resource[7] * quantity # check
+                    print("\n", price, "\n")
+                    if wallet < price:
+                        return jsonify(Error="Not Enough Money to Pay"), 400 # incorrect error code?
+                    else:
+                        walletAfter = wallet - price
+                        PaymentDao().updatePaymentWallet(payMethodId, walletAfter)
+                        # print("\nCharging Payment Method\n") # placeholder
+                        pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
+                        # change resource stock here
+                        purchase = self.getPurchaseById(pid)
+                        return jsonify(Purchase=purchase), 201
                 else:
-                    walletAfter = wallet - price
-                    # updatePaymentWallet(payMethodId, walletAfter)
-                    print("\nCharging Payment Method\n") # placeholder
-                    pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
-                    purchase = self.getPurchaseById(pid)
-                    return jsonify(Purchase=purchase), 201
-            else:
+                    return jsonify(Error="Quantity Requested Greater Than Stock"), 400 # incorrect error code?
+            elif not paymentMethod and resource:
                 return jsonify(Error="Payment Method Not Found"), 404
+            elif paymentMethod and not resource:
+                return jsonify(Error="Resource Not Found"), 404
+            else:
+                return jsonify(Error="Payment Method and Resource Not Found"), 404
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
 
