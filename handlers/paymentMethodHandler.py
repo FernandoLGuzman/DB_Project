@@ -11,7 +11,7 @@ class PaymentsMethodHandler:
         return result
 
 
-    def __build_payment_attributes(self, pmID, user_id, type, wallet):
+    def build_payment_attributes(self, pmID, user_id, type, wallet):
         result = {}
         result['payment_method_id'] = pmID
         result['user_id'] = user_id
@@ -61,7 +61,7 @@ class PaymentsMethodHandler:
                 if user_id and type and wallet:
                     dao = PaymentDao()
                     pmid = dao.insert(user_id,type,wallet)
-                    result = self.__build_payment_attributes(pmid,user_id,type,wallet)
+                    result = self.build_payment_attributes(pmid,user_id,type,wallet)
                     return jsonify(PaymentsMethod=result), 201
                 else:
                     return jsonify(Error="Attributes must not be null"), 400
@@ -83,7 +83,7 @@ class PaymentsMethodHandler:
                     wallet = form['wallet']
                     if user_id and type and wallet:
                         # dao.update(rid, name)
-                        result = self.__build_payment_attributes(pmid,user_id,type,wallet)
+                        result = self.build_payment_attributes(pmid,user_id,type,wallet)
                         return jsonify(PaymentMethod=result), 200
                     else:
                         return jsonify(Error="Attributes must not be null"), 400

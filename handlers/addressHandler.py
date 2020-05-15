@@ -15,14 +15,14 @@ class AddressHandler:
         return result
 
 
-    def __build_address_attributes(self, aid, street_address, city, country, zip_code, senate_region, latitud, longitud):
+    def build_address_attributes(self, aid, street_address, city, country, zip_code, senate_region, latitud, longitud):
         result = {}
         result['address_id'] = aid
         result['street_address'] = street_address
         result['city'] = city
         result['country'] = country
         result['zip_code'] = zip_code
-        result['senate_region'] = senate_region
+        result['region_id'] = senate_region
         result['latitud'] = latitud
         result['longitud'] = longitud
         return result
@@ -68,7 +68,7 @@ class AddressHandler:
                 if street_address and city and country and zip_code and senate_region and latitud and longitud:
                     dao = AddressDao()
                     aid = dao.insert(street_address,city,country,zip_code, senate_region,latitud,longitud)
-                    result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
+                    result = self.build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
                     return jsonify(Address=result), 201
                 else:
                     return jsonify(Error="Attributes must not be null"), 400
@@ -94,7 +94,7 @@ class AddressHandler:
                     longitud = form['longitud']
                     if street_address and city and country and zip_code and senate_region and latitud and longitud:
                         # dao.update(aid, parent_Address, name)
-                        result = self.__build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
+                        result = self.build_address_attributes(aid, street_address, city, country, zip_code, senate_region, latitud, longitud)
                         return jsonify(Address=result), 200
                     else:
                         return jsonify(Error="Attributes must not be null"), 400

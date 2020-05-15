@@ -120,12 +120,63 @@ class UserDao:
         cursor.close()
         return result
 
-    def insert(self, first_name, last_name, email, password, role_id, address_id, phone_number):
+    def insert(self, first_name, last_name, email, password, role_id, address_id, phone_number, autoCommit= True):
         cursor = self.connection.cursor()
         inserQuery = ("insert into users(first_name, last_name, email, password, role_id, address_id, phone_number) "
         "values (%s, %s, %s, %s, %s, %s, %s) ")
         cursor.execute(inserQuery, (first_name, last_name, email, password, role_id, address_id, phone_number))
         userId = cursor.lastrowid
-        self.connection.commit()
+        
+        if autoCommit:
+            self.connection.commit()
         cursor.close()
         return userId
+
+
+    def signupNoPayment(self, first_name, last_name, email, password, role_id, phone_number, street_address, city, country, zip_code, senate_region, latitud, longitud):
+        cursor = self.connection.cursor()
+
+        addQuery = ("insert into addresses(street_address, city, country, zip_code, region_id, latitud, longitud) "
+        "values (%s, %s, %s, %s, %s, %s, %s) ")
+        cursor.execute(addQuery, (street_address, city, country, zip_code, senate_region, latitud, longitud))
+        adID = cursor.lastrowid
+
+        userQuery = ("insert into users(first_name, last_name, email, password, role_id, address_id, phone_number) "
+        "values (%s, %s, %s, %s, %s, %s, %s) ")
+        cursor.execute(userQuery, (first_name, last_name, email, password, role_id, adID, phone_number))
+        userId = cursor.lastrowid
+
+        self.connection.commit()
+        cursor.close()
+        return adID, userId
+
+    
+    def signupWiPayment(self, first_name, last_name, email, password, role_id, phone_number, street_address, city, country, zip_code, senate_region, latitud, longitud, type, wallet):
+        cursor = self.connection.cursor()
+
+        addQuery = ("insert into addresses(street_address, city, country, zip_code, region_id, latitud, longitud) "
+        "values (%s, %s, %s, %s, %s, %s, %s) ")
+        cursor.execute(addQuery, (street_address, city, country, zip_code, senate_region, latitud, longitud))
+        adID = cursor.lastrowid
+
+        userQuery = ("insert into users(first_name, last_name, email, password, role_id, address_id, phone_number) "
+        "values (%s, %s, %s, %s, %s, %s, %s) ")
+        cursor.execute(userQuery, (first_name, last_name, email, password, role_id, adID, phone_number))
+        userId = cursor.lastrowid
+
+        payQuery = ("insert into payment_methods(user_id, type, wallet) "
+        "values (%s, %s, %s) ")
+        cursor.execute(payQuery, (userId, type, wallet))
+        pId = cursor.lastrowid
+
+        self.connection.commit()
+        cursor.close()
+        return adID, userId, pId
+
+
+    def commit(self):
+        self.connection.commit()
+
+
+    def rollback(self):
+        self.connection.rollback()

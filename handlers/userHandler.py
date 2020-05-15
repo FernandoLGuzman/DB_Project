@@ -1,4 +1,6 @@
 from flask import jsonify
+from handlers.addressHandler import AddressHandler
+from handlers.paymentMethodHandler import PaymentsMethodHandler
 from dao.user import UserDao
 from dao.payment import PaymentDao
 
@@ -156,11 +158,11 @@ class UserHandler:
                 return jsonify(Error = 'Unexpected attributes in get request'), 400
 
 
-    def insertUser(self, aid, form):
+    def insertUser(self, form):
         if not form:
             return jsonify(Error = 'Empty Form'), 400
         print("form: ", form)
-        if len(form) != 6:
+        if len(form) != 7:
             return jsonify(Error = "Malformed post request"), 400
         else:
             try:
@@ -170,16 +172,66 @@ class UserHandler:
                 email = form['email']
                 password = form['password']
                 phone_number = form['phone_number']
-                address_id = aid
+                address_id = form['address_id']
                 if fname and lname and email and password and phone_number and rid and address_id:
                     dao = UserDao()
                     uid = dao.insert(fname,lname,email,password,rid,address_id,phone_number)
-                    result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
+                    result = self.__build_user_attributes(uid, address_id, rid, fname, lname, email, password, phone_number)
                     return jsonify(User = result), 201
                 else:
                     return jsonify(Error = "Attributes must not be null"), 400
-            except:
-                return jsonify(Error = 'Unexpected attributes in post request'), 400
+            except Exception as e:
+                return jsonify(Error = f'Unexpected attributes in post request; {e}'), 400
+
+
+    def signUpUser(self, address, user, payment):
+        if not address and not user:
+            return jsonify(Error = 'Empty Address and User'), 400
+        elif len(user) != 6:
+            return jsonify(Error = "Malformed user post request"), 400
+        elif len(address) != 7:
+            return jsonify(Error = "Malformed address post request"), 400
+        elif payment and len(payment) != 2:
+            return jsonify(Error = "Malformed payment_method post request"), 400
+        else:
+            try:
+                rid = user['role_id']
+                fname = user['first_name']
+                lname = user['last_name']
+                email = user['email']
+                password = user['password']
+                phone_number = user['phone_number']
+
+                street_address = address['street_address']
+                city = address['city']
+                country = address['country']
+                zip_code = address['zip_code']
+                senate_region = address['senate_region']
+                latitud = address['latitud']
+                longitud = address['longitud']
+                if fname and lname and email and password and phone_number and rid and street_address and city and country and zip_code and senate_region and latitud and longitud:
+                    if payment:
+                        type = payment['type']
+                        wallet = payment['wallet']
+                        if type and wallet:
+                            dao = UserDao()
+                            aid, uid, pid = dao.signupWiPayment(fname,lname,email,password,rid,phone_number,street_address,city,country,zip_code,senate_region,latitud,longitud,type,wallet)
+                            userres = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
+                            addressres = AddressHandler().build_address_attributes(aid, street_address,city,country,zip_code,senate_region,latitud,longitud)
+                            paymentres = PaymentsMethodHandler().build_payment_attributes(pid,uid,type,wallet)
+                            return jsonify(User = userres, Address = addressres, Payment_Method = paymentres), 201
+                        else:
+                            return jsonify(Error = "Attributes must not be null"), 400
+                    else:
+                        dao = UserDao()
+                        aid, uid = dao.signupNoPayment(fname,lname,email,password,rid,phone_number,street_address,city,country,zip_code,senate_region,latitud,longitud)
+                        userres = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
+                        addressres = AddressHandler().build_address_attributes(aid,street_address,city,country,zip_code,senate_region,latitud,longitud)
+                        return jsonify(User = userres, Address = addressres), 201
+                else:
+                    return jsonify(Error = "Attributes must not be null"), 400
+            except Exception as e:
+                return jsonify(Error = f'Unexpected attributes in post request; {e}'), 400
 
 
     def deleteUser(self, uid):

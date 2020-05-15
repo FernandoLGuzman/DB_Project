@@ -45,12 +45,21 @@ class AddressDao:
         return result
 
 
-    def insert(self, street_address, city, country, zip_code, region_id, latitud, longitud):
+    def insert(self, street_address, city, country, zip_code, region_id, latitud, longitud, autoCommit = True):
         cursor = self.connection.cursor()
         inserQuery = ("insert into addresses(street_address, city, country, zip_code, region_id, latitud, longitud) "
         "values (%s, %s, %s, %s, %s, %s, %s) ")
         cursor.execute(inserQuery, (street_address, city, country, zip_code, region_id, latitud, longitud))
-        userId = cursor.lastrowid
-        self.connection.commit()
+        addID = cursor.lastrowid
+        if autoCommit:
+            self.connection.commit()
         cursor.close()
-        return userId
+        return addID
+
+
+    def commit(self):
+        self.connection.commit()
+
+
+    def rollback(self):
+        self.connection.rollback()
