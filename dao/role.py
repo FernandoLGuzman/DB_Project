@@ -51,3 +51,14 @@ class RoleDao:
         result = cursor.fetchone()
         cursor.close()
         return result
+
+
+    def insert(self, name):
+        cursor = self.connection.cursor()
+        inserQuery = ("insert into roles(role_name) "
+        "values (%s) ")
+        cursor.execute(inserQuery, (name,))
+        rID = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return rID

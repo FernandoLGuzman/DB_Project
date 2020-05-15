@@ -42,3 +42,14 @@ class RegionsDao:
         result = cursor.fetchone()
         cursor.close()
         return result
+
+
+    def insert(self, name):
+        cursor = self.connection.cursor()
+        inserQuery = ("insert into senate_region(name) "
+        "values (%s) ")
+        cursor.execute(inserQuery, (name,))
+        seId = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return seId

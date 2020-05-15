@@ -73,3 +73,14 @@ class CategoryDao:
         result = cursor.fetchone()
         cursor.close()
         return result
+
+
+    def insert(self, name, parent):
+        cursor = self.connection.cursor()
+        inserQuery = ("insert into categories(category_name, parent_category) "
+        "values (%s, %s) ")
+        cursor.execute(inserQuery, (name, parent))
+        userId = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+        return userId
