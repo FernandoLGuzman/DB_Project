@@ -1,5 +1,6 @@
 from flask import jsonify
 from dao.purchase import PurchaseDao
+from dao.payment import PaymentDao
 
 class PurchaseHandler:
     def buildPurchase(self, row):
@@ -64,12 +65,24 @@ class PurchaseHandler:
         # TODO later
         userId = json['user_id']
         resourceId = json['resource_id']
+        payMethodId = json['payment_method_id']
         quantity = json['quantity']
         price = json['purchase_price']
-        if userId and resourceId and quantity:
-            pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
-            purchase = self.getPurchaseById(pid)
-            return jsonify(Purchase=purchase), 201
+        if userId and resourceId and quantity and payMethodId:
+            paymentMethod = PaymentDao().getPaymentMethodById(payMethodId)
+            if paymentMethod:
+                wallet = paymentMethod[3]
+                if wallet < price:
+                    return jsonify(Error="Not Enough Money to Pay"), 400 # incorrect error code?
+                else:
+                    walletAfter = wallet - price
+                    # updatePaymentWallet(payMethodId, walletAfter)
+                    print("\nCharging Payment Method\n") # placeholder
+                    pid = PurchaseDao().insertPurchase(userId, resourceId, quantity, price)
+                    purchase = self.getPurchaseById(pid)
+                    return jsonify(Purchase=purchase), 201
+            else:
+                return jsonify(Error="Payment Method Not Found"), 404
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
 
