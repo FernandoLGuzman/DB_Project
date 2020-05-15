@@ -1,6 +1,7 @@
 from flask import Blueprint, request, json
 from handlers.userHandler import UserHandler
 from handlers.addressHandler import AddressHandler
+from handlers.paymentMethodHandler import PaymentsMethodHandler
 
 users = Blueprint('users', __name__)
 
@@ -41,6 +42,7 @@ def userLogin():
 
 @users.route('/sign_up', methods = ['POST'])
 def userSignup():
+    # TODO add payment method
     #POST handler code
     form = request.json
     reponse = AddressHandler().insertAddress(form['Address'])

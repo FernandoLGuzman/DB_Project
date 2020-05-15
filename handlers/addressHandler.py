@@ -10,8 +10,8 @@ class AddressHandler:
         result['country'] = row[3]
         result['zip_code'] = row[4]
         result['senate_region'] = row[5]
-        result['latitud'] = row[6]
-        result['longitud'] = row[7]
+        result['latitud'] = float(row[6])
+        result['longitud'] = float(row[7])
         return result
 
 
@@ -28,10 +28,9 @@ class AddressHandler:
         return result
 
 
-    def getAllAddresses(self):
-        #dao = PartsDAO()
-        address_list = [[0, "street", 'city', "country", "zipcode", "senate", "latitud", "longitud"]]
-        #address_list = dao.getAllParts()
+    def getAllAddresses(self, args):
+        dao = AddressDao()
+        address_list = dao.getAllAddresses()
         result_list = []
         for row in address_list:
             result = self.__build_address_dict(row)
@@ -40,12 +39,15 @@ class AddressHandler:
 
 
     def getAddressById(self, aid):
-        address_list = [[aid, "street", 'city', "country", "zipcode", "senate", "latitud", "longitud"]]
-        result_list = []
-        for row in address_list:
-            result = self.__build_address_dict(row)
+        dao = AddressDao()
+        address = dao.getAddressById(aid)
+        if address:
+            result_list = []
+            result = self.__build_address_dict(address)
             result_list.append(result)
-        return jsonify(Address = result_list), 200
+            return jsonify(Address = result_list), 200
+        else:
+            return jsonify(Error = "Address not Found"), 404
 
 
     def insertAddress(self, form):

@@ -7,7 +7,7 @@ class PaymentsMethodHandler:
         result['payment_method_id'] = row[0]
         result['user_id'] = row[1]
         result['type'] = row[2]
-        result['wallet'] = row[3]
+        result['wallet'] = float(row[3])
         return result
 
 
