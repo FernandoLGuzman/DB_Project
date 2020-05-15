@@ -1,4 +1,4 @@
-from flask import Blueprint, request, json
+from flask import Blueprint, request, json, jsonify
 from handlers.userHandler import UserHandler
 from handlers.addressHandler import AddressHandler
 from handlers.paymentMethodHandler import PaymentsMethodHandler
@@ -47,7 +47,11 @@ def userSignup():
     form = request.json
     reponse = AddressHandler().insertAddress(form['Address'])
     if reponse[1] == 201:
+        complete = {}
+        complete['Address'] = 
         aid = json.loads(reponse[0].get_data(True))['Address']['address_id']
-        return UserHandler().insertUser(aid, form['User'])
+        res = UserHandler().insertUser(aid, form['User'])
+        print(res)
+        return res
     else:
         return reponse

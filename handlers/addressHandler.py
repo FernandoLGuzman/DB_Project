@@ -72,8 +72,8 @@ class AddressHandler:
                     return jsonify(Address=result), 201
                 else:
                     return jsonify(Error="Attributes must not be null"), 400
-            except:
-                return jsonify(Error = 'Unexpected attributes in post request'), 400
+            except Exception as e:
+                return jsonify(Error = f'Unexpected attributes in post request; {e}'), 400
 
 
     def updateAddress(self, aid, form):

@@ -160,7 +160,7 @@ class UserHandler:
         if not form:
             return jsonify(Error = 'Empty Form'), 400
         print("form: ", form)
-        if len(form) != 7:
+        if len(form) != 6:
             return jsonify(Error = "Malformed post request"), 400
         else:
             try:
@@ -170,7 +170,7 @@ class UserHandler:
                 email = form['email']
                 password = form['password']
                 phone_number = form['phone_number']
-                address_id = form['address_id']
+                address_id = aid
                 if fname and lname and email and password and phone_number and rid and address_id:
                     dao = UserDao()
                     uid = dao.insert(fname,lname,email,password,rid,address_id,phone_number)
