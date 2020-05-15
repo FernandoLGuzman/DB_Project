@@ -22,7 +22,7 @@ def user():
             return UserHandler().searchUsers(request.args)
     elif request.method == 'POST':
         #POST handler code
-        UserHandler().insertUser(request.json)
+        return UserHandler().insertUser(request.json)
 
 @users.route('/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def userById(id):

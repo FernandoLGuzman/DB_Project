@@ -245,9 +245,8 @@ class UserHandler:
 
 
     def updateUser(self, uid, form):
-        # dao = UsersDAO()
-        # if not dao.getUserByID(uid):
-        if False: # hardcoded, delete later
+        dao = UserDao()
+        if not dao.getUserById(uid): # hardcoded, delete later
             return jsonify(Error = "User not found."), 404
         else:
             if len(form) != 7:
@@ -262,11 +261,10 @@ class UserHandler:
                     password = form['password']
                     phone_number = form['phone_number']
                     if fname and lname and email and password and phone_number and aid and rid:
-                        # dao = UsersDAO()
-                        # dao.update(uid, aid, rid, fname, lname, email, password, phone_number)
+                        dao.update(fname,lname,email,password,rid,aid,phone_number,uid)
                         result = self.__build_user_attributes(uid, aid, rid, fname, lname, email, password, phone_number)
                         return jsonify(User = result), 200
                     else:
                         return jsonify(Error = "Attributes must not be null"), 400
-                except:
-                    return jsonify(Error = 'Unexpected attributes in put request'), 400
+                except Exception as e:
+                    return jsonify(Error = f'Unexpected attributes in put request; {e}'), 400

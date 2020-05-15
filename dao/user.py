@@ -174,6 +174,17 @@ class UserDao:
         return adID, userId, pId
 
 
+    def update(self, first_name, last_name, email, password, role_id, address_id, phone_number, user_id):
+        cursor = self.connection.cursor()
+        updateQuery = ("update users "
+        "set first_name = %s, last_name = %s, email = %s, password = %s, role_id = %s, address_id = %s, phone_number = %s "
+        "where user_id = %s ")
+        cursor.execute(updateQuery, (first_name, last_name, email, password, role_id, address_id, phone_number, user_id))
+        pId = cursor.lastrowid
+        self.connection.commit()
+        cursor.close()
+
+
     def commit(self):
         self.connection.commit()
 

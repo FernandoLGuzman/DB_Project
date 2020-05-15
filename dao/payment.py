@@ -66,8 +66,7 @@ class PaymentDao:
 
     def update(self, payment_method_id, user_id, type, wallet):
         cursor = self.connection.cursor()
-        updateQuery = ("update payment_methods(user_id, type, wallet) "
-        "values (%s, %s, %s) WHERE payment_method_id = %s")
+        updateQuery = ("update payment_methods set user_id = %s, type = %s, wallet = %s WHERE payment_method_id = %s ")
         cursor.execute(updateQuery, (user_id, type, wallet, payment_method_id))
         pId = cursor.lastrowid
         self.connection.commit()
